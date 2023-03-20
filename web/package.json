@@ -12,14 +12,17 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@edge/xe-utils": "^1.8.1",
     "pinia": "^2.0.32",
     "sass": "^1.59.3",
+    "superagent": "^8.0.9",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/node": "^18.14.2",
+    "@types/superagent": "^4.1.16",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-typescript": "^11.0.2",
