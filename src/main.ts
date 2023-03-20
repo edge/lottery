@@ -2,9 +2,17 @@
 // Use of this source code is governed by a GNU GPL-style license
 // that can be found in the LICENSE.md file. All rights reserved.
 
+import { Database } from 'arangojs'
 import { Log, LogLevelFromString, StdioAdaptor } from '@edge/log'
+import { Models, connectDatabase, initDatabase } from './db'
 
 export type Config = {
+  arangodb: {
+    url: string
+    username: string
+    password: string
+    db: string
+  }
   log: {
     level: string
   }
@@ -12,7 +20,9 @@ export type Config = {
 
 export type Context = {
   config: Config
+  db: Database
   log: Log
+  model: Models
 }
 
 const createLogger = ({ config }: Context) => {
@@ -27,6 +37,9 @@ const main = async (config: Config) => {
 
   ctx.log = createLogger(ctx)
   ctx.log.info('initialized logger')
+
+  ctx.db = await connectDatabase(ctx)
+  ctx.model = await initDatabase(ctx)
 
   ctx.log.error('WIP')
 }

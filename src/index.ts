@@ -8,6 +8,12 @@ import main from './main'
 dotenv.config()
 
 main({
+  arangodb: {
+    url: process.env.ARANGODB_URL || 'http://localhost:8529',
+    username: process.env.ARANGODB_USERNAME || 'root',
+    password: process.env.ARANGODB_PASSWORD || 'root',
+    db: process.env.ARANGODB_DATABASE || 'lottery'
+  },
   log: {
     level: process.env.LOG_LEVEL || 'warn'
   }
