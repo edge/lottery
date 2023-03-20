@@ -44,7 +44,7 @@ export const list = ({ model }: Context): RequestHandler => async (req, res, nex
   const sort = sorts<EarningsPayment>(req.query.sort, ['hash', 'ASC'], sortFields)
 
   try {
-    const [totalCount, payments] = await model.earningsPayment.search(terms, [skip, limit], sort)
+    const [totalCount, payments] = await model.earningsPayments.search(terms, [skip, limit], sort)
 
     res.json({
       results: payments.map(present),

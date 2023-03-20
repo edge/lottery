@@ -3,7 +3,7 @@
 // that can be found in the LICENSE.md file. All rights reserved.
 
 import * as cycle from './cycle'
-import * as earningsPayment from './earnings/payment/jobs'
+import * as earningsPayments from './earnings/payments/jobs'
 import { Context } from './main'
 import { Log } from '@edge/log'
 import { omit } from 'lodash'
@@ -37,7 +37,7 @@ const setups: JobSetup[] = [
       ctx,
       'earnings:payment:sync',
       ctx.config.earnings.sync.interval,
-      earningsPayment.sync
+      earningsPayments.sync
     )
   }
 ]

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a GNU GPL-style license
 // that can be found in the LICENSE.md file. All rights reserved.
 
-import * as earningsPayment from './earnings/payment/api'
+import * as earningsPayments from './earnings/payments/api'
 import { Context } from './main'
 import Package from '../package.json'
 import cors from 'cors'
@@ -46,7 +46,7 @@ export default (ctx: Context) => {
 
   app.get('/api/version', version)
 
-  app.get('/api/earnings/payments', earningsPayment.list(ctx))
+  app.get('/api/earnings/payments', earningsPayments.list(ctx))
 
   app.use(finalError(ctx))
   app.use(finalNotFound)

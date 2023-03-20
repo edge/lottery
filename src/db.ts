@@ -8,13 +8,13 @@ import { DeepPartial } from './lib'
 import { Searchable } from 'arangosearch'
 import { omit } from 'lodash'
 import { Document, DocumentMetadata } from 'arangojs/documents'
-import earningsPayment, { EarningsPaymentModel } from './earnings/payment/db'
+import earningsPayments, { EarningsPaymentsModel } from './earnings/payments/db'
 
 /** Record with ArangoDB _key. */
 export type Key = Pick<DocumentMetadata, '_key'>
 
 export type Models = {
-  earningsPayment: EarningsPaymentModel
+  earningsPayments: EarningsPaymentsModel
 }
 
 /**
@@ -58,7 +58,7 @@ export const connectDatabase = async ({ config, log }: Context) => {
 }
 
 const createModels = (ctx: Context): Models => ({
-  earningsPayment: earningsPayment(ctx)
+  earningsPayments: earningsPayments(ctx)
 })
 
 /**
