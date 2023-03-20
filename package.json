@@ -15,11 +15,16 @@
   },
   "devDependencies": {
     "@edge/eslint-config-typescript": "^0.1.4",
+    "@types/dotenv": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "eslint": "^8.36.0",
     "nodemon": "^2.0.21",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "@edge/log": "^1.6.2",
+    "dotenv": "^16.0.3"
   }
 }
