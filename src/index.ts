@@ -14,7 +14,16 @@ main({
     password: process.env.ARANGODB_PASSWORD || 'root',
     db: process.env.ARANGODB_DATABASE || 'lottery'
   },
+  earnings: {
+    host: process.env.EARNINGS_HOST || 'https://earnings.test.network',
+    sync: {
+      enabled: true,
+      interval: parseInt(process.env.EARNINGS_SYNC_INTERVAL || '60000'),
+      pageSize: parseInt(process.env.EARNINGS_SYNC_PAGE_SIZE || '100')
+    }
+  },
   log: {
     level: process.env.LOG_LEVEL || 'warn'
-  }
+  },
+  startTime: process.env.START_TIME ? parseInt(process.env.START_TIME) : (new Date('2023-01-01')).getTime()
 })

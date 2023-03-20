@@ -17,6 +17,7 @@
     "@edge/eslint-config-typescript": "^0.1.4",
     "@types/dotenv": "^8.2.0",
     "@types/lodash": "^4.14.191",
+    "@types/superagent": "^4.1.16",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "eslint": "^8.36.0",
@@ -30,6 +31,7 @@
     "arangojs": "^7.8.0",
     "arangosearch": "^1.1.0",
     "dotenv": "^16.0.3",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "superagent": "^8.0.9"
   }
 }

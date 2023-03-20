@@ -1,20 +1,25 @@
 import * as xe from '@edge/xe-utils'
 import { Context } from '../../main'
+import { Key } from '../../db'
 import arangosearch from 'arangosearch'
 
 export type EarningsPaymentModel = ReturnType<typeof model>
 
 export type EarningsPayment = xe.tx.Tx
 
+const key = (p: EarningsPayment): Key & EarningsPayment => ({ ...p, _key: p.hash })
+
 const model = (ctx: Context) => {
-  const c = ctx.db.collection<EarningsPayment>('earningsPayment')
+  const ep = ctx.db.collection<EarningsPayment>('earningsPayment')
 
   return {
     init: async () => {
-      if (!await c.exists()) await c.create()
+      if (!await ep.exists()) await ep.create()
     },
-    get: (key: string) => c.document(key),
-    search: arangosearch.search(ctx.db, c)
+    find: arangosearch.find(ctx.db, ep),
+    get: (key: string) => ep.document(key),
+    insertMany: (ps: EarningsPayment[]) => ep.saveAll(ps.map(key), { returnNew: true }),
+    search: arangosearch.search(ctx.db, ep)
   }
 }
 
