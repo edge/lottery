@@ -22,6 +22,9 @@ main({
       pageSize: parseInt(process.env.EARNINGS_SYNC_PAGE_SIZE || '100')
     }
   },
+  http: {
+    port: parseInt(process.env.HTTP_PORT || '8777')
+  },
   log: {
     level: process.env.LOG_LEVEL || 'warn'
   },

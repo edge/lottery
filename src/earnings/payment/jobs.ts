@@ -14,11 +14,13 @@ export const sync = ({ config, model, log }: Context) => async () => {
   let fetch = true
   while (fetch) {
     const res = await lib.list(config.earnings.host, { status: 'confirmed', limit, offset, since })
+    log.debug('fetched payments', { count: res.metadata.count, limit, offset, since })
     data.push(...res.results)
     offset += limit
     if (offset > res.metadata.totalCount) fetch = false
-    log.debug('fetched payments', { count: res.metadata.count, limit, offset, since })
   }
+
+  if (data.length === 0) return
 
   const payments: EarningsPayment[] = data.map(d => d.tx as EarningsPayment)
   const result = await model.earningsPayment.insertMany(payments)

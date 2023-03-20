@@ -4,6 +4,7 @@
 
 import * as cycle from './cycle'
 import { Database } from 'arangojs'
+import api from './api'
 import createJobs from './jobs'
 import { Log, LogLevelFromString, StdioAdaptor } from '@edge/log'
 import { Models, connectDatabase, initDatabase } from './db'
@@ -22,6 +23,9 @@ export type Config = {
       interval: number
       pageSize: number
     }
+  }
+  http: {
+    port: number
   }
   log: {
     level: string
@@ -53,7 +57,16 @@ const main = async (config: Config) => {
   ctx.model = await initDatabase(ctx)
 
   const jobs = createJobs(ctx)
-  await cycle.run(jobs)
+
+  return new Promise((resolve, reject) => {
+    cycle.run(jobs)
+      .catch(reject)
+
+    api(ctx)
+      .on('error', err => ctx.log.error(err))
+      .on('close', reject)
+    ctx.log.info('http listening', { port: config.http.port })
+  })
 }
 
 export default main
