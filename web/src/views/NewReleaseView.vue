@@ -6,17 +6,20 @@ import type { Payment } from '@/api/earnings'
 import XEAmount from '@/components/XEAmount.vue'
 import { reactive, ref } from 'vue'
 
-const checked = reactive<string[]>([])
+const MAX_CHECKED = 11
+
+const checked = reactive<Record<string, Payment>>({})
 const payments = reactive<Payment[]>([])
 
+const canCheckMore = ref(false)
 const canLoadMore = ref(true)
 const limit = 10
 const page = ref(1)
 const totalCount = ref(0)
 
 function reset() {
+  for (const hash in checked) delete checked[hash]
   while (payments.length > 0) payments.pop()
-  while (checked.length > 0) checked.pop()
   canLoadMore.value = true
   totalCount.value = 0
   page.value = 1
@@ -24,10 +27,16 @@ function reset() {
 
 async function init() {
   reset()
-  const res = await earnings.listPayments({ limit: 11, page: page.value })
+  const res = await earnings.listPayments({ limit: MAX_CHECKED, page: page.value })
   totalCount.value = res.metadata.totalCount
   payments.push(...res.results)
-  checked.push(...res.results.map(p => p.hash))
+  res.results.forEach(payment => {
+    checked[payment.hash] = payment
+  })
+}
+
+function isChecked(payment: Payment) {
+  return checked[payment.hash] !== undefined
 }
 
 async function loadMore() {
@@ -44,8 +53,20 @@ async function loadMore() {
   }
 }
 
+function toggle(e: Event, payment: Payment) {
+  const inputChecked = (e.target as HTMLInputElement).checked
+  if (inputChecked) {
+    if (canCheckMore.value) {
+      checked[payment.hash] = payment
+    }
+  }
+  else delete checked[payment.hash]
+  canCheckMore.value = Object.keys(checked).length < MAX_CHECKED
+}
+
 async function submit() {
-  console.error('WIP')
+  const hashes = Object.keys(checked)
+  console.error('WIP', hashes, checked)
 }
 
 await init()
@@ -62,7 +83,12 @@ await init()
           <tr v-for="(payment, i) in payments" v-bind:key="payment.hash">
             <td class="i">{{ 1 + i }}</td>
             <td class="checked">
-              <input type="checkbox" :checked="checked.includes(payment.hash)"/>
+              <input
+                type="checkbox"
+                :checked="isChecked(payment)"
+                :disabled="!isChecked(payment) && !canCheckMore"
+                @change.prevent="e => toggle(e, payment)"
+              />
             </td>
             <td class="hash">
               <HashLink :hash="payment.hash"/>
@@ -84,7 +110,7 @@ await init()
         type="button"
         @click="loadMore"
       >Load more</button>
-      <button type="submit">Ready</button>
+      <button type="submit" :disabled="canCheckMore">Ready</button>
     </form>
   </main>
 </template>
