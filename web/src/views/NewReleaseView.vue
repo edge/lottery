@@ -7,24 +7,25 @@ import XEAmount from '@/components/XEAmount.vue'
 import { reactive, ref } from 'vue'
 
 const checked = reactive<string[]>([])
-const metadata = reactive({ canLoadMore: true, totalCount: 0 })
 const payments = reactive<Payment[]>([])
 
+const canLoadMore = ref(true)
 const limit = 10
 const page = ref(1)
+const totalCount = ref(0)
 
 function reset() {
   while (payments.length > 0) payments.pop()
   while (checked.length > 0) checked.pop()
-  metadata.canLoadMore = true
-  metadata.totalCount = 0
+  canLoadMore.value = true
+  totalCount.value = 0
   page.value = 1
 }
 
 async function init() {
   reset()
   const res = await earnings.listPayments({ limit: 11, page: page.value })
-  metadata.totalCount = res.metadata.totalCount
+  totalCount.value = res.metadata.totalCount
   payments.push(...res.results)
   checked.push(...res.results.map(p => p.hash))
 }
@@ -38,8 +39,8 @@ async function loadMore() {
   else {
     payments.push(...res.results)
   }
-  if (payments.length >= metadata.totalCount) {
-    metadata.canLoadMore = false
+  if (payments.length >= totalCount.value) {
+    canLoadMore.value = false
   }
 }
 
@@ -79,7 +80,7 @@ await init()
         </tbody>
       </table>
       <button
-        v-if="metadata.canLoadMore"
+        v-if="canLoadMore"
         type="button"
         @click="loadMore"
       >Load more</button>
