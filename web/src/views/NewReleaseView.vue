@@ -4,33 +4,35 @@ import AddressLink from '@/components/AddressLink.vue'
 import HashLink from '@/components/HashLink.vue'
 import type { Payment } from '@/api/earnings'
 import XEAmount from '@/components/XEAmount.vue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
 const checked = reactive<string[]>([])
 const metadata = reactive({ canLoadMore: true, totalCount: 0 })
-const paginate = reactive({ limit: 10, page: 1 })
 const payments = reactive<Payment[]>([])
 
-const reset = () => {
+const limit = 10
+const page = ref(1)
+
+function reset() {
   while (payments.length > 0) payments.pop()
   while (checked.length > 0) checked.pop()
   metadata.canLoadMore = true
   metadata.totalCount = 0
-  paginate.page = 1
+  page.value = 1
 }
 
-const init = async () => {
+async function init() {
   reset()
-  const res = await earnings.listPayments({ limit: 11, page: paginate.page })
+  const res = await earnings.listPayments({ limit: 11, page: page.value })
   metadata.totalCount = res.metadata.totalCount
   payments.push(...res.results)
   checked.push(...res.results.map(p => p.hash))
 }
 
-const loadMore = async () => {
-  paginate.page++
-  const res = await earnings.listPayments(paginate)
-  if (paginate.page === 2) {
+async function loadMore() {
+  page.value++
+  const res = await earnings.listPayments({ limit, page: page.value })
+  if (page.value === 2) {
     payments.push(...res.results.slice(1))
   }
   else {
@@ -41,7 +43,7 @@ const loadMore = async () => {
   }
 }
 
-const submit = async () => {
+async function submit() {
   console.error('WIP')
 }
 
