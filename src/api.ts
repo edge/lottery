@@ -8,6 +8,14 @@ import Package from '../package.json'
 import cors from 'cors'
 import express, { ErrorRequestHandler, RequestHandler } from 'express'
 
+const config = ({ config }: Context): RequestHandler => (req, res, next) => {
+  res.json({
+    funds: {
+      distribution: config.funds.distribution
+    }
+  })
+}
+
 /**
  * Final error handler.
  * Logs any unhandled error and ensures the response is a safe 500 Internal Server Error, if not already sent.
@@ -44,6 +52,7 @@ export default (ctx: Context) => {
   app.use(cors())
   app.use(express.json())
 
+  app.get('/api/config', config(ctx))
   app.get('/api/version', version)
 
   app.get('/api/earnings/payments', earningsPayments.list(ctx))

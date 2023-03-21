@@ -22,6 +22,12 @@ main({
       pageSize: parseInt(process.env.EARNINGS_SYNC_PAGE_SIZE || '100')
     }
   },
+  funds: {
+    distribution: [
+      10000 * 1e6,
+      ...(new Array(10).fill(1000 * 1e6))
+    ]
+  },
   http: {
     port: parseInt(process.env.HTTP_PORT || '8777')
   },

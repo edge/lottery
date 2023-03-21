@@ -24,6 +24,9 @@ export type Config = {
       pageSize: number
     }
   }
+  funds: {
+    distribution: number[]
+  }
   http: {
     port: number
   }

@@ -4,9 +4,13 @@ import AddressLink from '@/components/AddressLink.vue'
 import HashLink from '@/components/HashLink.vue'
 import type { Payment } from '@/api/earnings'
 import XEAmount from '@/components/XEAmount.vue'
-import { reactive, ref } from 'vue'
+import { useConfig } from '@/stores/config'
+import { computed, reactive, ref } from 'vue'
 
-const MAX_CHECKED = 11
+const config = useConfig()
+await config.fetch()
+
+const maxChecked = computed(() => config.config?.funds.distribution.length || 0)
 
 const checked = reactive<Record<string, Payment>>({})
 const payments = reactive<Payment[]>([])
@@ -27,7 +31,7 @@ function reset() {
 
 async function init() {
   reset()
-  const res = await earnings.listPayments({ limit: MAX_CHECKED, page: page.value })
+  const res = await earnings.listPayments({ limit: maxChecked.value, page: page.value })
   totalCount.value = res.metadata.totalCount
   payments.push(...res.results)
   res.results.forEach(payment => {
@@ -41,6 +45,7 @@ function isChecked(payment: Payment) {
 
 async function loadMore() {
   page.value++
+
   const res = await earnings.listPayments({ limit, page: page.value })
   if (page.value === 2) {
     payments.push(...res.results.slice(1))
@@ -61,7 +66,7 @@ function toggle(e: Event, payment: Payment) {
     }
   }
   else delete checked[payment.hash]
-  canCheckMore.value = Object.keys(checked).length < MAX_CHECKED
+  canCheckMore.value = Object.keys(checked).length < maxChecked.value
 }
 
 async function submit() {
