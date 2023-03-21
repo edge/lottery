@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as earnings from '@/api/earnings'
+import * as releases from '@/api/releases'
 import AddressLink from '@/components/AddressLink.vue'
 import HashLink from '@/components/HashLink.vue'
 import type { Payment } from '@/api/earnings'
@@ -58,8 +59,16 @@ function toggle(e: Event, payment: Payment) {
 }
 
 async function submit() {
-  const hashes = Object.keys(checked)
-  console.error('WIP', hashes, checked)
+  const winners = Object.values(checked).map((tx, i) => {
+    const amount = config.config?.funds.distribution[i] as number
+    return {
+      amount,
+      hash: tx.hash,
+      recipient: tx.recipient
+    }
+  })
+  const res = await releases.create({ release: { winners } })
+  console.log(res)
 }
 
 await init()

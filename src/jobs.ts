@@ -2,10 +2,10 @@
 // Use of this source code is governed by a GNU GPL-style license
 // that can be found in the LICENSE.md file. All rights reserved.
 
-import * as cycle from './cycle'
 import * as earningsPayments from './earnings/payments/jobs'
 import { Context } from './main'
 import { Log } from '@edge/log'
+import { cycle } from '@edge/api-sdk'
 import { omit } from 'lodash'
 
 type JobSetup = (ctx: Context) => cycle.Job | undefined

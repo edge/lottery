@@ -3,6 +3,7 @@
 // that can be found in the LICENSE.md file. All rights reserved.
 
 import * as earningsPayments from './earnings/payments/api'
+import * as releases from './releases/api'
 import { Context } from './main'
 import Package from '../package.json'
 import cors from 'cors'
@@ -14,6 +15,7 @@ const config = ({ config }: Context): RequestHandler => (req, res, next) => {
       distribution: config.funds.distribution
     }
   })
+  next()
 }
 
 /**
@@ -57,6 +59,8 @@ export default (ctx: Context) => {
 
   app.get('/api/earnings/payments', earningsPayments.list(ctx))
   app.get('/api/earnings/payments/highest', earningsPayments.listHighest(ctx))
+
+  app.post('/api/releases', releases.create(ctx))
 
   app.use(finalError(ctx))
   app.use(finalNotFound)

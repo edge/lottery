@@ -2,10 +2,10 @@
 // Use of this source code is governed by a GNU GPL-style license
 // that can be found in the LICENSE.md file. All rights reserved.
 
-import * as cycle from './cycle'
 import { Database } from 'arangojs'
 import api from './api'
 import createJobs from './jobs'
+import { cycle } from '@edge/api-sdk'
 import { Log, LogLevelFromString, StdioAdaptor } from '@edge/log'
 import { Models, connectDatabase, initDatabase } from './db'
 

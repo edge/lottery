@@ -3,8 +3,8 @@ import { EarningsPayment } from './db'
 import { Key } from '../../db'
 import { RequestHandler } from 'express'
 import { present } from './http'
+import { query } from '@edge/api-sdk'
 import { DeepNonNullable, Terms } from 'arangosearch'
-import { array, numeric, sorts } from '../../http/query'
 
 const sortFields: (keyof EarningsPayment)[] = [
   'amount',
@@ -17,16 +17,16 @@ const sortFields: (keyof EarningsPayment)[] = [
 ]
 
 export const list = ({ model }: Context): RequestHandler => async (req, res, next) => {
-  const limit = numeric(req.query.limit, 1, 100) || 10
-  const page = numeric(req.query.page, 1) || 1
+  const limit = query.integer(req.query.limit, 1, 100) || 10
+  const page = query.integer(req.query.page, 1) || 1
   const skip = limit * (page - 1)
 
-  const recipient = array(req.query.recipient)
-  const sender = array(req.query.sender)
-  const hash = array(req.query.hash)
+  const recipient = query.array(req.query.recipient)
+  const sender = query.array(req.query.sender)
+  const hash = query.array(req.query.hash)
 
-  const since = numeric(req.query.since)
-  const until = numeric(req.query.until)
+  const since = query.integer(req.query.since)
+  const until = query.integer(req.query.until)
 
   let terms: Terms<Key & DeepNonNullable<EarningsPayment>> | undefined
   if (recipient.length || sender.length || hash.length || since !== undefined || until !== undefined) {
@@ -41,7 +41,7 @@ export const list = ({ model }: Context): RequestHandler => async (req, res, nex
     }
   }
 
-  const sort = sorts<EarningsPayment>(req.query.sort, ['hash', 'ASC'], sortFields)
+  const sort = query.sorts<EarningsPayment>(req.query.sort, sortFields, ['hash', 'ASC'])
 
   try {
     const [totalCount, payments] = await model.earningsPayments.search(terms, [skip, limit], sort)
@@ -66,9 +66,9 @@ export const list = ({ model }: Context): RequestHandler => async (req, res, nex
 }
 
 export const listHighest = ({ config, model }: Context): RequestHandler => async (req, res, next) => {
-  const limit = numeric(req.query.limit, 1, 100) || 10
-  const page = numeric(req.query.page, 1) || 1
-  const skip = numeric(req.query.skip, 0) || limit * (page - 1)
+  const limit = query.integer(req.query.limit, 1, 100) || 10
+  const page = query.integer(req.query.page, 1) || 1
+  const skip = query.integer(req.query.skip, 0) || limit * (page - 1)
 
   try {
     // @todo implement since last release
