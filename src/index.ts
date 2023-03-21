@@ -23,10 +23,9 @@ main({
     }
   },
   funds: {
-    distribution: [
-      10000 * 1e6,
-      ...(new Array(10).fill(1000 * 1e6))
-    ]
+    distribution: process.env.FUNDS_DISTRIBUTION
+      ? process.env.FUNDS_DISTRIBUTION.split(',').map(v => parseInt(v))
+      : [10000 * 1e6, ...(new Array(10).fill(1000 * 1e6))]
   },
   http: {
     port: parseInt(process.env.HTTP_PORT || '8777')

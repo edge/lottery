@@ -34,3 +34,14 @@ export const listPayments = async (
   const res = cb === undefined ? await req : await cb(req)
   return res.body
 }
+
+export const listHighestPayments = async (
+  params?: Partial<Record<'limit' | 'page' | 'skip', number>>,
+  cb?: RequestCallback
+): Promise<ListPaymentsResponse> => {
+  let url = `${config.api.host}/earnings/payments/highest`
+  if (params) url += `?${toQueryString(params)}`
+  const req = superagent.get(url)
+  const res = cb === undefined ? await req : await cb(req)
+  return res.body
+}

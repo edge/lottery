@@ -64,3 +64,36 @@ export const list = ({ model }: Context): RequestHandler => async (req, res, nex
     next(err)
   }
 }
+
+export const listHighest = ({ config, model }: Context): RequestHandler => async (req, res, next) => {
+  const limit = numeric(req.query.limit, 1, 100) || 10
+  const page = numeric(req.query.page, 1) || 1
+  const skip = numeric(req.query.skip, 0) || limit * (page - 1)
+
+  try {
+    // @todo implement since last release
+    const since = config.startTime
+
+    const terms: Terms<Key & DeepNonNullable<EarningsPayment>> = {
+      timestamp: { gte: since }
+    }
+
+    const { totalCount, results } = await model.earningsPayments.searchHighest(terms, [skip, limit])
+
+    res.json({
+      results,
+      metadata: {
+        count: results.length,
+        limit,
+        page,
+        skip,
+        terms,
+        totalCount
+      }
+    })
+    next()
+  }
+  catch (err) {
+    next(err)
+  }
+}

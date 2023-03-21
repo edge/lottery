@@ -15,23 +15,22 @@ const maxChecked = computed(() => config.config?.funds.distribution.length || 0)
 const checked = reactive<Record<string, Payment>>({})
 const payments = reactive<Payment[]>([])
 
-const canCheckMore = ref(false)
-const canLoadMore = ref(true)
 const limit = 10
-const page = ref(1)
+const skip = computed(() => Object.keys(payments).length)
 const totalCount = ref(0)
+
+const canCheckMore = computed(() => Object.keys(checked).length < maxChecked.value)
+const canLoadMore = computed(() => skip.value < totalCount.value)
 
 function reset() {
   for (const hash in checked) delete checked[hash]
   while (payments.length > 0) payments.pop()
-  canLoadMore.value = true
   totalCount.value = 0
-  page.value = 1
 }
 
 async function init() {
   reset()
-  const res = await earnings.listPayments({ limit: maxChecked.value, page: page.value })
+  const res = await earnings.listHighestPayments({ limit: maxChecked.value })
   totalCount.value = res.metadata.totalCount
   payments.push(...res.results)
   res.results.forEach(payment => {
@@ -44,18 +43,8 @@ function isChecked(payment: Payment) {
 }
 
 async function loadMore() {
-  page.value++
-
-  const res = await earnings.listPayments({ limit, page: page.value })
-  if (page.value === 2) {
-    payments.push(...res.results.slice(1))
-  }
-  else {
-    payments.push(...res.results)
-  }
-  if (payments.length >= totalCount.value) {
-    canLoadMore.value = false
-  }
+  const res = await earnings.listHighestPayments({ limit, skip: skip.value })
+  payments.push(...res.results)
 }
 
 function toggle(e: Event, payment: Payment) {
@@ -66,7 +55,6 @@ function toggle(e: Event, payment: Payment) {
     }
   }
   else delete checked[payment.hash]
-  canCheckMore.value = Object.keys(checked).length < maxChecked.value
 }
 
 async function submit() {
@@ -110,11 +98,7 @@ await init()
           </tr>
         </tbody>
       </table>
-      <button
-        v-if="canLoadMore"
-        type="button"
-        @click="loadMore"
-      >Load more</button>
+      <button type="button" :disabled="!canLoadMore" @click="loadMore">Load more</button>
       <button type="submit" :disabled="canCheckMore">Ready</button>
     </form>
   </main>

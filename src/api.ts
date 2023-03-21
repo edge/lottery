@@ -56,6 +56,7 @@ export default (ctx: Context) => {
   app.get('/api/version', version)
 
   app.get('/api/earnings/payments', earningsPayments.list(ctx))
+  app.get('/api/earnings/payments/highest', earningsPayments.listHighest(ctx))
 
   app.use(finalError(ctx))
   app.use(finalNotFound)
