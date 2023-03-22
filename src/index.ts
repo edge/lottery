@@ -14,6 +14,9 @@ main({
     password: process.env.ARANGODB_PASSWORD || 'root',
     db: process.env.ARANGODB_DATABASE || 'lottery'
   },
+  blockchain: {
+    host: process.env.BLOCKCHAIN_HOST || 'https://xe1.test.network'
+  },
   earnings: {
     host: process.env.EARNINGS_HOST || 'https://earnings.test.network',
     sync: {
@@ -25,7 +28,11 @@ main({
   funds: {
     distribution: process.env.FUNDS_DISTRIBUTION
       ? process.env.FUNDS_DISTRIBUTION.split(',').map(v => parseInt(v))
-      : [10000 * 1e6, ...(new Array(10).fill(1000 * 1e6))]
+      : [10000 * 1e6, ...(new Array(10).fill(1000 * 1e6))],
+    payer: {
+      address: process.env.FUNDS_PAYER_ADDRESS || '',
+      privateKey: process.env.FUNDS_PAYER_PRIVATE_KEY || ''
+    }
   },
   http: {
     port: parseInt(process.env.HTTP_PORT || '8777')

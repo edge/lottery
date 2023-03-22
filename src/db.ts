@@ -9,6 +9,7 @@ import { Searchable } from 'arangosearch'
 import { omit } from 'lodash'
 import { Document, DocumentMetadata } from 'arangojs/documents'
 import earningsPayments, { EarningsPaymentsModel } from './earnings/payments/db'
+import payouts, { PayoutsModel } from './payouts/db'
 import releases, { ReleasesModel } from './releases/db'
 
 /** Record with ArangoDB _key. */
@@ -16,6 +17,7 @@ export type Key = Pick<DocumentMetadata, '_key'>
 
 export type Models = {
   earningsPayments: EarningsPaymentsModel
+  payouts: PayoutsModel
   releases: ReleasesModel
 }
 
@@ -61,6 +63,7 @@ export const connectDatabase = async ({ config, log }: Context) => {
 
 const createModels = (ctx: Context): Models => ({
   earningsPayments: earningsPayments(ctx),
+  payouts: payouts(ctx),
   releases: releases(ctx)
 })
 

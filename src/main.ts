@@ -16,6 +16,9 @@ export type Config = {
     password: string
     db: string
   }
+  blockchain: {
+    host: string
+  }
   earnings: {
     host: string
     sync: {
@@ -26,6 +29,10 @@ export type Config = {
   }
   funds: {
     distribution: number[]
+    payer: {
+      address: string
+      privateKey: string
+    }
   }
   http: {
     port: number

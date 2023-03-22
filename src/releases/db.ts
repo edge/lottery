@@ -7,9 +7,11 @@ export type ReleasesModel = ReturnType<typeof model>
 
 export type Release = {
   timestamp: number
-  winners: Pick<EarningsPayment, 'amount' | 'hash' | 'recipient'>[]
+  winners: Winner[]
   highestHashes: Pick<EarningsPayment, 'hash' | 'recipient'>[]
 }
+
+export type Winner = Pick<EarningsPayment, 'amount' | 'hash' | 'recipient'>
 
 const model = (ctx: Context) => {
   const r = ctx.db.collection<Release>('releases')
