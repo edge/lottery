@@ -8,6 +8,7 @@ import { DeepPartial } from './lib'
 import { Searchable } from 'arangosearch'
 import { omit } from 'lodash'
 import { Document, DocumentMetadata } from 'arangojs/documents'
+import blocks, { BlocksModel } from './blocks/db'
 import earningsPayments, { EarningsPaymentsModel } from './earnings/payments/db'
 import payouts, { PayoutsModel } from './payouts/db'
 import releases, { ReleasesModel } from './releases/db'
@@ -16,6 +17,7 @@ import releases, { ReleasesModel } from './releases/db'
 export type Key = Pick<DocumentMetadata, '_key'>
 
 export type Models = {
+  blocks: BlocksModel
   earningsPayments: EarningsPaymentsModel
   payouts: PayoutsModel
   releases: ReleasesModel
@@ -62,6 +64,7 @@ export const connectDatabase = async ({ config, log }: Context) => {
 }
 
 const createModels = (ctx: Context): Models => ({
+  blocks: blocks(ctx),
   earningsPayments: earningsPayments(ctx),
   payouts: payouts(ctx),
   releases: releases(ctx)

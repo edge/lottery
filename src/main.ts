@@ -18,6 +18,12 @@ export type Config = {
   }
   blockchain: {
     host: string
+    sync: {
+      enabled: boolean
+      interval: number
+      batchSize: number
+      pageSize: number
+    }
   }
   earnings: {
     host: string

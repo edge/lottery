@@ -7,6 +7,8 @@ import main from './main'
 
 dotenv.config()
 
+const TRUE = ['1', 'on', 'yes', 'true']
+
 main({
   arangodb: {
     url: process.env.ARANGODB_URL || 'http://localhost:8529',
@@ -15,7 +17,13 @@ main({
     db: process.env.ARANGODB_DATABASE || 'lottery'
   },
   blockchain: {
-    host: process.env.BLOCKCHAIN_HOST || 'https://xe1.test.network'
+    host: process.env.BLOCKCHAIN_HOST || 'https://xe1.test.network',
+    sync: {
+      enabled:  TRUE.includes(process.env.BLOCKCHAIN_SYNC_ENABLED || 'yes'),
+      interval: parseInt(process.env.BLOCKCHAIN_SYNC_INTERVAL || '60000'),
+      batchSize: parseInt(process.env.BLOCKCHAIN_SYNC_BATCH_SIZE || '10'),
+      pageSize: parseInt(process.env.BLOCKCHAIN_SYNC_PAGE_SIZE || '10')
+    }
   },
   earnings: {
     host: process.env.EARNINGS_HOST || 'https://earnings.test.network',

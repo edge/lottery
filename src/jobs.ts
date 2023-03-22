@@ -2,6 +2,7 @@
 // Use of this source code is governed by a GNU GPL-style license
 // that can be found in the LICENSE.md file. All rights reserved.
 
+import * as blocks from './blocks/jobs'
 import * as earningsPayments from './earnings/payments/jobs'
 import { Context } from './main'
 import { Log } from '@edge/log'
@@ -32,6 +33,14 @@ const createJob = (
 }
 
 const setups: JobSetup[] = [
+  ctx => {
+    if (ctx.config.blockchain.sync.enabled) return createJob(
+      ctx,
+      'blockchain:sync',
+      ctx.config.blockchain.sync.interval,
+      blocks.sync
+    )
+  },
   ctx => {
     if (ctx.config.earnings.sync.enabled) return createJob(
       ctx,
