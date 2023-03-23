@@ -5,11 +5,10 @@ import { present } from './http'
 import { present as presentPayout } from '../payouts/http'
 import { DeepNonNullable, Filter, Terms } from 'arangosearch'
 import { Document, DocumentMetadata } from 'arangojs/documents'
-import { isArangoNotFound, Key, newDoc } from '../db'
+import { Key, isArangoNotFound, newDoc } from '../db'
 import { Payout, PayoutTx } from '../payouts/db'
 import { Release, Winner } from './db'
 import { identity, query, http as sdkHttp, unique, validate } from '@edge/api-sdk'
-import { badRequest } from '@edge/api-sdk/dist/lib/http'
 
 const MONTH = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -168,7 +167,7 @@ export const create = ({ config, model }: Context): RequestHandler => {
 
 export const get = ({ model }: Context): RequestHandler => async (req, res, next) => {
   const key = query.str(req.params.key)
-  if (!key) return badRequest(res, next, { reason: 'invalid key' })
+  if (!key) return sdkHttp.badRequest(res, next, { reason: 'invalid key' })
 
   try {
     const release = await model.releases.get(key)
