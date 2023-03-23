@@ -48,5 +48,19 @@ main({
   log: {
     level: process.env.LOG_LEVEL || 'warn'
   },
+  payout: {
+    confirm: {
+      enabled: TRUE.includes(process.env.PAYOUT_CONFIRM_ENABLED || 'yes'),
+      gracePeriod: parseInt(process.env.PAYOUT_CONFIRM_GRACE_PERIOD || '900000'),
+      interval: parseInt(process.env.PAYOUT_CONFIRM_ENABLED || '60000'),
+      threshold: parseInt(process.env.PAYOUT_CONFIRM_THRESHOLD || '10')
+    },
+    submit: {
+      batchSize: parseInt(process.env.PAYOUT_SUBMIT_BATCH_SIZE || '50'),
+      dryRun: TRUE.includes(process.env.PAYOUT_SUBMIT_DRY_RUN || 'yes'),
+      enabled: TRUE.includes(process.env.PAYOUT_SUBMIT_ENABLED || 'yes'),
+      interval: parseInt(process.env.PAYOUT_SUBMIT_INTERVAL || '60000')
+    }
+  },
   startTime: process.env.START_TIME ? parseInt(process.env.START_TIME) : (new Date('2023-01-01')).getTime()
 })

@@ -46,6 +46,20 @@ export type Config = {
   log: {
     level: string
   }
+  payout: {
+    confirm: {
+      enabled: boolean
+      gracePeriod: number
+      interval: number
+      threshold: number
+    }
+    submit: {
+      batchSize: number
+      dryRun: boolean
+      enabled: boolean
+      interval: number
+    }
+  }
   startTime: number
 }
 

@@ -4,6 +4,7 @@
 
 import * as blocks from './blocks/jobs'
 import * as earningsPayments from './earnings/payments/jobs'
+import * as payouts from './payouts/jobs'
 import { Context } from './main'
 import { Log } from '@edge/log'
 import { cycle } from '@edge/api-sdk'
@@ -47,6 +48,22 @@ const setups: JobSetup[] = [
       'earnings:payment:sync',
       ctx.config.earnings.sync.interval,
       earningsPayments.sync
+    )
+  },
+  ctx => {
+    if (ctx.config.payout.submit.enabled) return createJob(
+      ctx,
+      'payout:submit:sync',
+      ctx.config.payout.submit.interval,
+      payouts.submit
+    )
+  },
+  ctx => {
+    if (ctx.config.payout.confirm.enabled) return createJob(
+      ctx,
+      'payout:confirm:sync',
+      ctx.config.payout.confirm.interval,
+      payouts.confirm
     )
   }
 ]
