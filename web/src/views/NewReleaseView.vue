@@ -8,7 +8,10 @@ import XEAmount from '@/components/XEAmount.vue'
 import { formatTimestamp } from '@/lib'
 import { useBuild } from '@/stores/build'
 import { useConfig } from '@/stores/config'
+import { useRouter } from 'vue-router'
 import { computed, reactive, ref } from 'vue'
+
+const router = useRouter()
 
 const build = useBuild()
 const { config, reload: reloadConfig } = useConfig()
@@ -17,13 +20,16 @@ const maxChecked = computed(() => config.funds.distribution.length || 0)
 
 const checked = reactive<Record<string, Payment>>({})
 const payments = reactive<Payment[]>([])
+const mode = ref<'pick' | 'ready'>('pick')
 
+const lastError = ref<Error>()
 const limit = 10
 const skip = computed(() => Object.keys(payments).length)
 const totalCount = ref(0)
 
 const canCheckMore = computed(() => Object.keys(checked).length < maxChecked.value)
 const canLoadMore = computed(() => skip.value < totalCount.value)
+const checkedList = computed(() => Object.values(checked))
 const lastReleaseDate = computed(() => formatTimestamp(config.nextRelease.since))
 
 function reset() {
@@ -61,6 +67,14 @@ function toggle(e: Event, payment: Payment) {
   else delete checked[payment.hash]
 }
 
+function pick() {
+  mode.value = 'pick'
+}
+
+function ready() {
+  mode.value = 'ready'
+}
+
 async function submit() {
   const winners = Object.values(checked).map((tx, i) => {
     const amount = config.funds.distribution[i] as number
@@ -70,9 +84,16 @@ async function submit() {
       recipient: tx.recipient
     }
   })
-  const res = await releases.create(build.api.host, { release: { winners } })
-  console.log(res)
-  reloadConfig()
+
+  try {
+    const res = await releases.create(build.api.host, { release: { winners } })
+    await reloadConfig()
+    router.push(`/releases/${res.release._key}`)
+  }
+  catch (err) {
+    lastError.value = err as Error
+    console.log(err)
+  }
 }
 
 init()
@@ -83,46 +104,89 @@ init()
     <header>
       <h2>New Release</h2>
     </header>
-    <p>Showing highest earnings transactions since {{ lastReleaseDate }}</p>
-    <form @submit.prevent="submit">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Hash</th>
-            <th>Recipient</th>
-            <th>Amount</th>
-            <th>Memo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(payment, i) in payments" v-bind:key="payment.hash">
-            <td class="i">{{ 1 + i }}</td>
-            <td class="checked">
-              <input
-                type="checkbox"
-                :checked="isChecked(payment)"
-                :disabled="!isChecked(payment) && !canCheckMore"
-                @change.prevent="e => toggle(e, payment)"
-              />
-            </td>
-            <td class="hash">
-              <HashLink :hash="payment.hash"/>
-            </td>
-            <td class="recipient">
-              <AddressLink :address="payment.recipient"/>
-            </td>
-            <td class="amount">
-              <XEAmount :mxe="payment.amount"/>
-            </td>
-            <td class="memo">
-              {{ payment.data.memo }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button type="button" :disabled="!canLoadMore" @click="loadMore">Load more</button>
-      <button type="submit" :disabled="canCheckMore">Ready</button>
-    </form>
+    <div class="pick" v-if="mode === 'pick'">
+      <p>Showing highest earnings transactions since {{ lastReleaseDate }}</p>
+      <form @submit.prevent="ready">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Hash</th>
+              <th>Recipient</th>
+              <th>Amount</th>
+              <th>Memo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(payment, i) in payments" v-bind:key="payment.hash">
+              <td class="i">{{ 1 + i }}</td>
+              <td class="checked">
+                <input
+                  type="checkbox"
+                  :checked="isChecked(payment)"
+                  :disabled="!isChecked(payment) && !canCheckMore"
+                  @change.prevent="e => toggle(e, payment)"
+                />
+              </td>
+              <td class="hash">
+                <HashLink :hash="payment.hash"/>
+              </td>
+              <td class="recipient">
+                <AddressLink :address="payment.recipient"/>
+              </td>
+              <td class="amount">
+                <XEAmount :mxe="payment.amount"/>
+              </td>
+              <td class="memo">
+                {{ payment.data.memo }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" :disabled="!canLoadMore" @click="loadMore">Load more</button>
+        <button type="submit" :disabled="canCheckMore">Ready</button>
+      </form>
+    </div>
+    <div class="ready" v-if="mode === 'ready'">
+      <p>Showing selected earnings transactions since {{ lastReleaseDate }}</p>
+      <p>If you are satisfied with your selection, click <em>Submit</em> to proceed.</p>
+      <form @submit.prevent="submit">
+        <table>
+          <thead>
+            <tr>
+              <th>Hash</th>
+              <th>Recipient</th>
+              <th>Amount</th>
+              <th>Memo</th>
+              <th>Winnings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(payment, i) in checkedList" v-bind:key="payment.hash">
+              <td class="hash">
+                <HashLink :hash="payment.hash"/>
+              </td>
+              <td class="recipient">
+                <AddressLink :address="payment.recipient"/>
+              </td>
+              <td class="amount">
+                <XEAmount :mxe="payment.amount"/>
+              </td>
+              <td class="memo">
+                {{ payment.data.memo }}
+              </td>
+              <td class="winnings">
+                <XEAmount :mxe="config.funds.distribution[i]"/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" @click="pick">Back</button>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <div class="error" v-if="lastError">
+      {{ lastError.message }}
+    </div>
   </main>
 </template>

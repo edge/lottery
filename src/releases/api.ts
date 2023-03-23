@@ -5,7 +5,7 @@ import { present } from './http'
 import { present as presentPayout } from '../payouts/http'
 import { DeepNonNullable, Filter, Terms } from 'arangosearch'
 import { Document, DocumentMetadata } from 'arangojs/documents'
-import { Key, isArangoNotFound, newDoc } from '../db'
+import { Key, isArangoError, isArangoNotFound } from '../db'
 import { Payout, PayoutTx } from '../payouts/db'
 import { Release, Winner } from './db'
 import { identity, query, http as sdkHttp, unique, validate } from '@edge/api-sdk'
@@ -22,7 +22,7 @@ const toMemoDate = (timestamp: number) => {
   return `${m} ${y}`
 }
 
-export const create = ({ config, model }: Context): RequestHandler => {
+export const create = ({ config, model, log }: Context): RequestHandler => {
   type Data = {
     release: Pick<Release, 'winners'>
   }
@@ -82,6 +82,14 @@ export const create = ({ config, model }: Context): RequestHandler => {
       if (outdated.length > 0) {
         const outdatedHashes = outdated.map(tx => tx.hash)
         throw new validate.ValidateError('release.winners', `transactions too old (${outdatedHashes.join(', ')})`)
+      }
+
+      // check no winning transaction has already been rewarded
+      const [, existPayouts] = await model.payouts.search({ _key: { in: hashes } })
+      if (existPayouts.length) {
+        const existHashes = existPayouts.map(p => p._key)
+        // eslint-disable-next-line max-len
+        throw new validate.ValidateError('release.winners.hash', `some transactions already rewarded (${existHashes.join(', ')})`)
       }
 
       const sortedHashes = hashes.map(identity).sort()
@@ -146,12 +154,19 @@ export const create = ({ config, model }: Context): RequestHandler => {
           memo: `Lottery Winnings ${memoDate}`
         }
       }))
-      let payouts = unsigned.map<Partial<DocumentMetadata> & Payout>(tx => ({
+
+      const payouts = unsigned.map<Partial<DocumentMetadata> & Payout>(tx => ({
         release: doc._key,
         status: 'unsent',
         tx
       }))
-      payouts = (await model.payouts.insertMany(payouts)).map(newDoc)
+
+      const results = await model.payouts.insertMany(payouts)
+      const errors = results.filter(isArangoError)
+      errors.forEach(err => log.error(err))
+      if (errors.length > 0) {
+        return next(new Error('failed to insert all payouts'))
+      }
 
       res.json({
         release: present(doc),

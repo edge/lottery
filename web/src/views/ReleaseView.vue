@@ -16,9 +16,10 @@ const route = useRoute()
 const release = ref<Release>()
 const payouts = reactive<Record<string, Payout>>({})
 
-async function init() {
+async function load() {
   const res = await getRelease(build.api.host, route.params.key as string)
   release.value = res.release
+  for (const hash in payouts) delete payouts[hash]
   for (const refHash in res.payouts) payouts[refHash] = res.payouts[refHash]
 }
 
@@ -26,7 +27,7 @@ function getPayout(winner: Winner): Payout {
   return payouts[winner.hash]
 }
 
-init()
+load()
 </script>
 
 <template>
@@ -68,5 +69,6 @@ init()
         </tr>
       </tbody>
     </table>
+    <button type="button" @click="load">Reload</button>
   </main>
 </template>
