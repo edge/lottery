@@ -8,6 +8,8 @@ import * as releases from './releases/api'
 import { Context } from './main'
 import Package from '../package.json'
 import cors from 'cors'
+import { readFile, stat } from 'fs/promises'
+import { sep } from 'path'
 import express, { ErrorRequestHandler, RequestHandler } from 'express'
 
 const config = ({ config, model }: Context): RequestHandler => async (req, res, next) => {
@@ -60,7 +62,7 @@ const version: RequestHandler = (req, res, next) => {
 /**
  * Initialise and run HTTP API.
  */
-export default (ctx: Context) => {
+export default async (ctx: Context) => {
   const app = express()
 
   app.use(cors())
@@ -77,6 +79,33 @@ export default (ctx: Context) => {
   app.post('/api/releases', releases.create(ctx))
   app.get('/api/releases', releases.list(ctx))
   app.get('/api/releases/:key', releases.get(ctx))
+
+  // static content fallback for admin pwa, including forwarding to index
+  const fileRegexp = /\.[a-zA-Z]*$/
+  try {
+    const info = await stat(ctx.config.static.path)
+    if (info.isDirectory()) {
+      const indexHtml = await readFile(`${ctx.config.static.path}${sep}index.html`)
+      app.use(express.static(ctx.config.static.path))
+      app.use((req, res, next) => {
+        if (req.headers['content-type'] !== 'application/json' && !fileRegexp.test(req.path)) {
+          res.header('Content-Type', 'text/html').send(indexHtml)
+        }
+        next()
+      })
+    }
+    else {
+      ctx.log.error('static content path is not a directory', { path: ctx.config.static.path })
+    }
+  }
+  catch (err) {
+    if (/^ENOENT:/.test((err as Error).message)) {
+      ctx.log.warn('static content path not found', { path: ctx.config.static.path })
+    }
+    else {
+      ctx.log.error('failed to set up static content request handling', { err })
+    }
+  }
 
   app.use(finalError(ctx))
   app.use(finalNotFound)

@@ -62,6 +62,9 @@ export type Config = {
     }
   }
   startTime: number
+  static: {
+    path: string
+  }
 }
 
 export type Context = {
@@ -95,9 +98,11 @@ const main = async (config: Config) => {
     cycle.run(jobs)
       .catch(reject)
 
-    api(ctx)
-      .on('error', err => ctx.log.error(err))
-      .on('close', reject)
+    api(ctx).then(server => {
+      server
+        .on('error', err => ctx.log.error(err))
+        .on('close', reject)
+    })
     ctx.log.info('http listening', { port: config.http.port })
   })
 }

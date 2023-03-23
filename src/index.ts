@@ -62,5 +62,8 @@ main({
       interval: parseInt(process.env.PAYOUT_SUBMIT_INTERVAL || '60000')
     }
   },
-  startTime: process.env.START_TIME ? parseInt(process.env.START_TIME) : (new Date('2023-01-01')).getTime()
+  startTime: process.env.START_TIME ? parseInt(process.env.START_TIME) : (new Date('2023-01-01')).getTime(),
+  static: {
+    path: process.env.STATIC_PATH || 'web/dist'
+  }
 })
