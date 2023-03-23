@@ -1,13 +1,25 @@
 import * as xe from '@edge/xe-utils'
 import { Context } from '../main'
-import { Payout, PayoutTx } from '../payouts/db'
 import { RequestHandler } from 'express'
 import { newDoc } from '../db'
 import { present } from './http'
 import { present as presentPayout } from '../payouts/http'
 import { Document, DocumentMetadata } from 'arangojs/documents'
+import { Payout, PayoutTx } from '../payouts/db'
 import { Release, Winner } from './db'
 import { identity, http as sdkHttp, unique, validate } from '@edge/api-sdk'
+
+const MONTH = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+]
+
+const toMemoDate = (timestamp: number) => {
+  const d = new Date(timestamp)
+  const m = MONTH[d.getUTCMonth()]
+  const y = d.getUTCFullYear()
+  return `${m} ${y}`
+}
 
 export const create = ({ config, model }: Context): RequestHandler => {
   type Data = {
@@ -17,7 +29,6 @@ export const create = ({ config, model }: Context): RequestHandler => {
   const readBody = validate.validate<Data>({
     release: {
       winners: arr => {
-        console.log(arr)
         if (!(arr instanceof Array)) throw new Error('must be an array')
         for (const value of arr) {
           if (value instanceof Array) throw new Error('value must not be an array')
@@ -118,6 +129,7 @@ export const create = ({ config, model }: Context): RequestHandler => {
 
     // attach timestamp to release
     release.timestamp = Date.now()
+    const memoDate = toMemoDate(release.timestamp)
 
     try {
       const doc = await model.releases.insert(release)
@@ -130,7 +142,7 @@ export const create = ({ config, model }: Context): RequestHandler => {
         nonce: 0,
         data: {
           ref: w.hash,
-          memo: 'Lottery Winnings'
+          memo: `Lottery Winnings ${memoDate}`
         }
       }))
       let payouts = unsigned.map<Partial<DocumentMetadata> & Payout>(tx => ({

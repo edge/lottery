@@ -80,7 +80,7 @@ export const sync = (ctx: Context) => {
 
       // index payout transactions
       if (result.transactions.length > 0) {
-        // @todo
+        await model.payouts.index(result.transactions)
       }
 
       // index blocks

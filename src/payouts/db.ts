@@ -35,10 +35,10 @@ const model = (ctx: Context) => {
     find: arangosearch.find(ctx.db, ep),
     index: async (txs: BlockTx[]) => {
       const refs = txs.map(tx => tx.tx.data.ref).filter(Boolean) as string[]
-      const [count, payouts] = await self.search({ tx: { hash: { in: refs } } })
+      const [count, payouts] = await self.search({ _key: { in: refs } } )
       if (count === 0) return
       const updates = payouts.map<Update<Payout>>(p => {
-        const tx = txs.find(tx => tx.tx.hash === p.tx.data.ref) as BlockTx
+        const tx = txs.find(tx => tx.tx.data.ref === p.tx.data.ref) as BlockTx
         return {
           _key: p._key,
           hash: tx.tx.hash,
@@ -49,7 +49,7 @@ const model = (ctx: Context) => {
       const result = await self.updateMany(updates)
       const errors = result.filter(isArangoError)
       errors.forEach(err => ctx.log.error('failed to update payout', err))
-      ctx.log.info('updated payouts from index', { num: result.length - errors.length, errors: errors.length })
+      ctx.log.info('updated payouts', { num: result.length - errors.length, errors: errors.length })
     },
     get: (key: string) => ep.document(key),
     insertMany: (ps: Payout[]) => ep.saveAll(ps.map(key), { returnNew: true }),
