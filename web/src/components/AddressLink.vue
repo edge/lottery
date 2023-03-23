@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import config from '@/config'
+import { useBuild } from '@/stores/build';
 import { computed } from 'vue'
+
+const build = useBuild()
 
 type Props = {
   address: string
@@ -9,7 +11,7 @@ type Props = {
 
 const props = withDefaults(defineProps<Props>(), { length: 7 })
 
-const href = computed(() => `${config.explorer.host}/wallet/${props.address}`)
+const href = computed(() => `${build.explorer.host}/wallet/${props.address}`)
 </script>
 
 <template>

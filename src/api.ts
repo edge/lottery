@@ -9,13 +9,24 @@ import Package from '../package.json'
 import cors from 'cors'
 import express, { ErrorRequestHandler, RequestHandler } from 'express'
 
-const config = ({ config }: Context): RequestHandler => (req, res, next) => {
-  res.json({
-    funds: {
-      distribution: config.funds.distribution
-    }
-  })
-  next()
+const config = ({ config, model }: Context): RequestHandler => async (req, res, next) => {
+  try {
+    const lastRelease = await model.releases.find(undefined, ['timestamp', 'DESC'])
+    const since = lastRelease?.timestamp || config.startTime
+
+    res.json({
+      funds: {
+        distribution: config.funds.distribution
+      },
+      nextRelease: {
+        since
+      }
+    })
+    next()
+  }
+  catch (err) {
+    return next(err)
+  }
 }
 
 /**

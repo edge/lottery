@@ -10,7 +10,5 @@ import PrimaryMenu from '@/components/PrimaryMenu.vue'
     </div>
   </header>
 
-  <Suspense>
-    <RouterView />
-  </Suspense>
+  <RouterView />
 </template>

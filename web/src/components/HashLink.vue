@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import config from '@/config'
+import { useBuild } from '@/stores/build';
 import { computed } from 'vue';
+
+const build = useBuild()
 
 type Props = {
   hash: string
@@ -9,7 +11,7 @@ type Props = {
 
 const props = withDefaults(defineProps<Props>(), { length: 8 })
 
-const href = computed(() => `${config.explorer.host}/transaction/${props.hash}`)
+const href = computed(() => `${build.explorer.host}/transaction/${props.hash}`)
 </script>
 
 <template>

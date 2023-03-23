@@ -1,5 +1,4 @@
 import type * as xe from '@edge/xe-utils'
-import config from '@/config'
 import superagent from 'superagent'
 import { toQueryString, type RequestCallback } from '.'
 
@@ -25,10 +24,11 @@ export type ListPaymentsResponse = {
 export type Payment = xe.tx.Tx
 
 export const listPayments = async (
+  host: string,
   params?: ListPaymentsParams,
   cb?: RequestCallback
 ): Promise<ListPaymentsResponse> => {
-  let url = `${config.api.host}/earnings/payments`
+  let url = `${host}/earnings/payments`
   if (params) url += `?${toQueryString(params)}`
   const req = superagent.get(url)
   const res = cb === undefined ? await req : await cb(req)
@@ -36,10 +36,11 @@ export const listPayments = async (
 }
 
 export const listHighestPayments = async (
+  host: string,
   params?: Partial<Record<'limit' | 'page' | 'skip', number>>,
   cb?: RequestCallback
 ): Promise<ListPaymentsResponse> => {
-  let url = `${config.api.host}/earnings/payments/highest`
+  let url = `${host}/earnings/payments/highest`
   if (params) url += `?${toQueryString(params)}`
   const req = superagent.get(url)
   const res = cb === undefined ? await req : await cb(req)

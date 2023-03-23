@@ -1,5 +1,4 @@
 import type { RequestCallback } from '.'
-import config from '@/config'
 import superagent from 'superagent'
 
 export type CreateRequest = {
@@ -22,10 +21,11 @@ export type Winner = {
 }
 
 export const create = async (
+  host: string,
   data?: CreateRequest,
   cb?: RequestCallback
 ): Promise<CreateResponse> => {
-  const url = `${config.api.host}/releases`
+  const url = `${host}/releases`
   const req = superagent.post(url).send(data)
   const res = cb === undefined ? await req : await cb(req)
   return res.body

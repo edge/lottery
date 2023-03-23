@@ -5,13 +5,14 @@ import AddressLink from '@/components/AddressLink.vue'
 import HashLink from '@/components/HashLink.vue'
 import type { Payment } from '@/api/earnings'
 import XEAmount from '@/components/XEAmount.vue'
+import { useBuild } from '@/stores/build'
 import { useConfig } from '@/stores/config'
 import { computed, reactive, ref } from 'vue'
 
-const config = useConfig()
-await config.fetch()
+const build = useBuild()
+const { config, reload: reloadConfig } = useConfig()
 
-const maxChecked = computed(() => config.config?.funds.distribution.length || 0)
+const maxChecked = computed(() => config.funds.distribution.length || 0)
 
 const checked = reactive<Record<string, Payment>>({})
 const payments = reactive<Payment[]>([])
@@ -22,6 +23,7 @@ const totalCount = ref(0)
 
 const canCheckMore = computed(() => Object.keys(checked).length < maxChecked.value)
 const canLoadMore = computed(() => skip.value < totalCount.value)
+const lastReleaseDate = computed(() => new Date(config.nextRelease.since).toLocaleString())
 
 function reset() {
   for (const hash in checked) delete checked[hash]
@@ -31,7 +33,7 @@ function reset() {
 
 async function init() {
   reset()
-  const res = await earnings.listHighestPayments({ limit: maxChecked.value })
+  const res = await earnings.listHighestPayments(build.api.host, { limit: maxChecked.value })
   totalCount.value = res.metadata.totalCount
   payments.push(...res.results)
   res.results.forEach(payment => {
@@ -44,7 +46,7 @@ function isChecked(payment: Payment) {
 }
 
 async function loadMore() {
-  const res = await earnings.listHighestPayments({ limit, skip: skip.value })
+  const res = await earnings.listHighestPayments(build.api.host, { limit, skip: skip.value })
   payments.push(...res.results)
 }
 
@@ -60,18 +62,19 @@ function toggle(e: Event, payment: Payment) {
 
 async function submit() {
   const winners = Object.values(checked).map((tx, i) => {
-    const amount = config.config?.funds.distribution[i] as number
+    const amount = config.funds.distribution[i] as number
     return {
       amount,
       hash: tx.hash,
       recipient: tx.recipient
     }
   })
-  const res = await releases.create({ release: { winners } })
+  const res = await releases.create(build.api.host, { release: { winners } })
   console.log(res)
+  reloadConfig()
 }
 
-await init()
+init()
 </script>
 
 <template>
@@ -79,6 +82,7 @@ await init()
     <header>
       <h2>New Release</h2>
     </header>
+    <p>Showing earnings transactions since {{ lastReleaseDate }}</p>
     <form @submit.prevent="submit">
       <table>
         <tbody>
