@@ -22,7 +22,7 @@ const toMemoDate = (timestamp: number) => {
   return `${m} ${y}`
 }
 
-export const create = ({ config, model, log }: Context): RequestHandler => {
+export const create = ({ config, model, payer, log }: Context): RequestHandler => {
   type Data = {
     release: Pick<Release, 'winners'>
   }
@@ -119,6 +119,12 @@ export const create = ({ config, model, log }: Context): RequestHandler => {
         return sdkHttp.badRequest(res, next, { param: ve.param, reason: ve.message })
       }
       else return next(err)
+    }
+
+    // check funds
+    const info = await payer.refresh()
+    if (info.balance < config.funds.distribution.reduce((a, b) => a + b)) {
+      return sdkHttp.paymentRequired(res, next, { reason: 'insufficient payer funds' })
     }
 
     // attach highest hashes snapshot to release

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import PayerInfo from './components/PayerInfo.vue'
 import PrimaryMenu from '@/components/PrimaryMenu.vue'
 import { RouterView } from 'vue-router'
 </script>
@@ -10,4 +11,8 @@ import { RouterView } from 'vue-router'
   </header>
 
   <RouterView />
+
+  <footer class="bottom">
+    <PayerInfo />
+  </footer>
 </template>

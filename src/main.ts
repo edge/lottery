@@ -8,6 +8,7 @@ import createJobs from './jobs'
 import { cycle } from '@edge/api-sdk'
 import { Log, LogLevelFromString, StdioAdaptor } from '@edge/log'
 import { Models, connectDatabase, initDatabase } from './db'
+import { Payer, payer } from './payer'
 
 export type Config = {
   arangodb: {
@@ -68,6 +69,7 @@ export type Context = {
   db: Database
   log: Log
   model: Models
+  payer: Payer
 }
 
 const createLogger = ({ config }: Context) => {
@@ -85,6 +87,7 @@ const main = async (config: Config) => {
 
   ctx.db = await connectDatabase(ctx)
   ctx.model = await initDatabase(ctx)
+  ctx.payer = payer(ctx)
 
   const jobs = createJobs(ctx)
 

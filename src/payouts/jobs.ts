@@ -40,7 +40,7 @@ export const confirm = ({ config, model, log }: Context) => async () => {
   log.info('updated payouts', { num: results.length - errors.length, errors: errors.length })
 }
 
-export const submit = ({ config, model, log }: Context) => async () => {
+export const submit = ({ config, model, payer, log }: Context) => async () => {
   const [, ps] = await model.payouts.search({ status: { eq: 'unsent' } }, [config.payout.submit.batchSize])
   if (ps.length === 0) {
     log.info('no transactions')
@@ -49,7 +49,7 @@ export const submit = ({ config, model, log }: Context) => async () => {
   log.info('submitting transactions', { num: ps.length })
 
   const signed: (Key & Payout)[] = []
-  const info = await xe.wallet.infoWithNextNonce(config.blockchain.host, config.funds.payer.address)
+  const info = await payer.refresh()
   ps.forEach((p, i) => {
     p.tx.timestamp = Date.now()
     p.tx.nonce = info.nonce + i

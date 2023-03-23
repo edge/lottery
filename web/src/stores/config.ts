@@ -21,4 +21,3 @@ export const useConfig = defineStore('config', () => {
 
   return { config: config.value, reload }
 })
-

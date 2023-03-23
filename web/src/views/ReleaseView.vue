@@ -33,8 +33,7 @@ load()
 <template>
   <main>
     <header class="title">
-      <h2>Release {{ release?._key }}</h2>
-      <h3>{{ release && formatTimestamp(release.timestamp) }}</h3>
+      <h2>Release {{ release && formatTimestamp(release.timestamp) }} (#{{ release?._key }})</h2>
     </header>
     <table>
       <thead>
