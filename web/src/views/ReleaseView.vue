@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { get as getRelease } from '@/api/releases'
-import type { Release, Winner } from '@/api/releases';
-import { useBuild } from '@/stores/build';
-import { reactive, ref } from 'vue';
-import { formatTimestamp } from '@/lib';
-import XEAmount from '@/components/XEAmount.vue';
-import AddressLink from '@/components/AddressLink.vue';
-import HashLink from '@/components/HashLink.vue';
-import { useRoute } from 'vue-router';
+import AddressLink from '@/components/AddressLink.vue'
+import HashLink from '@/components/HashLink.vue'
 import type { Payout } from '@/api/payouts'
+import XEAmount from '@/components/XEAmount.vue'
+import { formatTimestamp } from '@/lib'
+import { get as getRelease } from '@/api/releases'
+import { useBuild } from '@/stores/build'
+import { useRoute } from 'vue-router'
+import type { Release, Winner } from '@/api/releases'
+import { reactive, ref } from 'vue'
 
 const build = useBuild()
 const route = useRoute()
 
-const release = ref<Release | null>(null)
+const release = ref<Release>()
 const payouts = reactive<Record<string, Payout>>({})
 
 async function init() {

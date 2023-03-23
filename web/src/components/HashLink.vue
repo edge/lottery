@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useBuild } from '@/stores/build';
-import { computed } from 'vue';
+import { computed } from 'vue'
+import { useBuild } from '@/stores/build'
 
 const build = useBuild()
 

@@ -1,6 +1,6 @@
 import type * as xe from '@edge/xe-utils'
 import superagent from 'superagent'
-import { toQueryString, type RequestCallback } from '.'
+import { type RequestCallback, toQueryString } from '.'
 
 export type ListPaymentsParams = {
   hash?: string

@@ -1,12 +1,10 @@
+import './assets/main.scss'
+import App from './App.vue'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { initBuild } from './stores/build'
 import { initConfig } from './stores/config'
-
-import App from './App.vue'
 import router from './router'
-
-import './assets/main.scss'
 
 async function init() {
   const app = createApp(App)

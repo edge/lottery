@@ -1,4 +1,4 @@
-import type { SuperAgentRequest } from "superagent"
+import type { SuperAgentRequest } from 'superagent'
 
 export type RequestCallback = (r: SuperAgentRequest) => SuperAgentRequest
 

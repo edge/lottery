@@ -1,7 +1,7 @@
-import { get as getConfig, type Config } from '@/api/config'
-import { inject, ref, type App } from 'vue'
-import { defineStore } from 'pinia'
 import { build } from './build'
+import { defineStore } from 'pinia'
+import { type App, inject, ref } from 'vue'
+import { type Config, get as getConfig } from '@/api/config'
 
 export const initConfig = async (app: App) => {
   const config = await getConfig(build.api.host)

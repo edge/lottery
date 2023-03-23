@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import type { Release } from '@/api/releases'
+import XEAmount from '@/components/XEAmount.vue'
+import { formatTimestamp } from '@/lib'
 import { list as listReleases } from '@/api/releases'
-import type { Release } from '@/api/releases';
-import { useBuild } from '@/stores/build';
-import { reactive } from 'vue';
-import { formatTimestamp } from '@/lib';
-import XEAmount from '@/components/XEAmount.vue';
+import { reactive } from 'vue'
+import { useBuild } from '@/stores/build'
 
 const build = useBuild()
 

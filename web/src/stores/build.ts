@@ -1,4 +1,4 @@
-import { inject, type App } from "vue"
+import { type App, inject } from 'vue'
 
 export const build = {
   api: {

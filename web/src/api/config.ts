@@ -1,5 +1,5 @@
-import superagent from 'superagent'
 import type { RequestCallback } from '.'
+import superagent from 'superagent'
 
 export type Config = {
   funds: {

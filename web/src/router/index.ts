@@ -1,8 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '@/views/DashboardView.vue'
 import NewReleaseView from '@/views/NewReleaseView.vue'
 import PastReleasesView from '@/views/PastReleasesView.vue'
 import ReleaseView from '@/views/ReleaseView.vue'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

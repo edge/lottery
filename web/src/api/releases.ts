@@ -1,6 +1,6 @@
-import { toQueryString, type RequestCallback } from '.'
-import superagent from 'superagent'
 import type { Payout } from './payouts'
+import superagent from 'superagent'
+import { type RequestCallback, toQueryString } from '.'
 
 export type CreateRequest = {
   release: Pick<Release, 'winners'>

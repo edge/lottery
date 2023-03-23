@@ -5,10 +5,10 @@ import AddressLink from '@/components/AddressLink.vue'
 import HashLink from '@/components/HashLink.vue'
 import type { Payment } from '@/api/earnings'
 import XEAmount from '@/components/XEAmount.vue'
+import { formatTimestamp } from '@/lib'
 import { useBuild } from '@/stores/build'
 import { useConfig } from '@/stores/config'
 import { computed, reactive, ref } from 'vue'
-import { formatTimestamp } from '@/lib'
 
 const build = useBuild()
 const { config, reload: reloadConfig } = useConfig()
