@@ -1,4 +1,3 @@
-import DashboardView from '@/views/DashboardView.vue'
 import NewReleaseView from '@/views/NewReleaseView.vue'
 import PastReleasesView from '@/views/PastReleasesView.vue'
 import ReleaseView from '@/views/ReleaseView.vue'
@@ -10,7 +9,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Dashboard',
-      component: DashboardView
+      component: PastReleasesView
     },
     {
       path: '/releases/new',
