@@ -72,6 +72,8 @@ export default (ctx: Context) => {
   app.get('/api/earnings/payments/highest', earningsPayments.listHighest(ctx))
 
   app.post('/api/releases', releases.create(ctx))
+  app.get('/api/releases', releases.list(ctx))
+  app.get('/api/releases/:key', releases.get(ctx))
 
   app.use(finalError(ctx))
   app.use(finalNotFound)

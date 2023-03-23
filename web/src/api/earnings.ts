@@ -8,6 +8,8 @@ export type ListPaymentsParams = {
   page?: number
   recipient?: string
   sender?: string
+  since?: number
+  until?: number
 }
 
 export type ListPaymentsResponse = {

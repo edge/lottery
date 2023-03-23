@@ -8,6 +8,7 @@ import XEAmount from '@/components/XEAmount.vue'
 import { useBuild } from '@/stores/build'
 import { useConfig } from '@/stores/config'
 import { computed, reactive, ref } from 'vue'
+import { formatTimestamp } from '@/lib'
 
 const build = useBuild()
 const { config, reload: reloadConfig } = useConfig()
@@ -23,7 +24,7 @@ const totalCount = ref(0)
 
 const canCheckMore = computed(() => Object.keys(checked).length < maxChecked.value)
 const canLoadMore = computed(() => skip.value < totalCount.value)
-const lastReleaseDate = computed(() => new Date(config.nextRelease.since).toLocaleString())
+const lastReleaseDate = computed(() => formatTimestamp(config.nextRelease.since))
 
 function reset() {
   for (const hash in checked) delete checked[hash]
@@ -82,9 +83,18 @@ init()
     <header>
       <h2>New Release</h2>
     </header>
-    <p>Showing earnings transactions since {{ lastReleaseDate }}</p>
+    <p>Showing highest earnings transactions since {{ lastReleaseDate }}</p>
     <form @submit.prevent="submit">
       <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Hash</th>
+            <th>Recipient</th>
+            <th>Amount</th>
+            <th>Memo</th>
+          </tr>
+        </thead>
         <tbody>
           <tr v-for="(payment, i) in payments" v-bind:key="payment.hash">
             <td class="i">{{ 1 + i }}</td>

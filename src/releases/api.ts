@@ -1,13 +1,15 @@
 import * as xe from '@edge/xe-utils'
 import { Context } from '../main'
 import { RequestHandler } from 'express'
-import { newDoc } from '../db'
 import { present } from './http'
 import { present as presentPayout } from '../payouts/http'
+import { DeepNonNullable, Filter, Terms } from 'arangosearch'
 import { Document, DocumentMetadata } from 'arangojs/documents'
+import { isArangoNotFound, Key, newDoc } from '../db'
 import { Payout, PayoutTx } from '../payouts/db'
 import { Release, Winner } from './db'
-import { identity, http as sdkHttp, unique, validate } from '@edge/api-sdk'
+import { identity, query, http as sdkHttp, unique, validate } from '@edge/api-sdk'
+import { badRequest } from '@edge/api-sdk/dist/lib/http'
 
 const MONTH = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -161,5 +163,67 @@ export const create = ({ config, model }: Context): RequestHandler => {
     catch (err) {
       next(err)
     }
+  }
+}
+
+export const get = ({ model }: Context): RequestHandler => async (req, res, next) => {
+  const key = query.str(req.params.key)
+  if (!key) return badRequest(res, next, { reason: 'invalid key' })
+
+  try {
+    const release = await model.releases.get(key)
+
+    const [, payouts] = await model.payouts.search({ release: { eq: release._key }})
+
+    res.json({
+      release: present(release),
+      payouts: payouts.map(presentPayout).reduce((ps, p) => {
+        ps[p.tx.data.ref] = p as Payout
+        return ps
+      }, <Record<string, Payout>>{})
+    })
+  }
+  catch (err) {
+    return isArangoNotFound(err) ? sdkHttp.notFound(res, next) : next(err)
+  }
+}
+
+export const list = ({ model }: Context): RequestHandler => async (req, res, next) => {
+  const limit = query.integer(req.query.limit, 1, 100) || 10
+  const page = query.integer(req.query.page, 1) || 1
+  const skip = limit * (page - 1)
+
+  const since = query.integer(req.query.since)
+  const until = query.integer(req.query.until)
+
+  let terms: Terms<Key & DeepNonNullable<Release>> | undefined
+  if (since !== undefined || until !== undefined) {
+    const timestamp: Filter<number> = {}
+    if (since !== undefined) timestamp.gte = since
+    if (until !== undefined) timestamp.lt = until
+    terms = { timestamp }
+  }
+
+  const sort = query.sorts<Release>(req.query.sort, ['timestamp'], ['timestamp', 'DESC'])
+
+  try {
+    const [totalCount, payments] = await model.releases.search(terms, [skip, limit], sort)
+
+    res.json({
+      results: payments.map(present),
+      metadata: {
+        count: payments.length,
+        limit,
+        page,
+        skip,
+        sort,
+        terms,
+        totalCount
+      }
+    })
+    next()
+  }
+  catch (err) {
+    next(err)
   }
 }

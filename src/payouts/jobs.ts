@@ -57,7 +57,7 @@ export const submit = ({ config, model, log }: Context) => async () => {
     const tx = xe.tx.sign(p.tx, config.funds.payer.privateKey) as PayoutTx
     signed.push({
       ...p,
-      tx: { ...tx, hash: undefined }
+      tx: { ...tx }
     })
   })
 

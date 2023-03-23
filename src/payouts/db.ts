@@ -41,7 +41,9 @@ const model = (ctx: Context) => {
         const tx = txs.find(tx => tx.tx.data.ref === p.tx.data.ref) as BlockTx
         return {
           _key: p._key,
-          hash: tx.tx.hash,
+          tx: {
+            hash: tx.tx.hash
+          },
           block: tx.block,
           status: 'processing'
         }
