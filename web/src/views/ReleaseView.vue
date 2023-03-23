@@ -32,7 +32,7 @@ load()
 
 <template>
   <main>
-    <header>
+    <header class="title">
       <h2>Release {{ release?._key }}</h2>
       <h3>{{ release && formatTimestamp(release.timestamp) }}</h3>
     </header>
@@ -69,6 +69,8 @@ load()
         </tr>
       </tbody>
     </table>
-    <button type="button" @click="load">Reload</button>
+    <div class="actions">
+      <button type="button" @click="load">Reload</button>
+    </div>
   </main>
 </template>

@@ -4,10 +4,9 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <PrimaryMenu/>
-    </div>
+  <header class="top">
+    <h1 class="appname">Edge Lottery</h1>
+    <PrimaryMenu/>
   </header>
 
   <RouterView />

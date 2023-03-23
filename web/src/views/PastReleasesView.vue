@@ -29,13 +29,13 @@ init()
 
 <template>
   <main>
-    <header>
+    <header class="title">
       <h2>Past Releases</h2>
     </header>
     <table>
       <thead>
         <tr>
-          <th>Time</th>
+          <th>Date</th>
           <th>No. of Winners</th>
           <th>Amount</th>
         </tr>

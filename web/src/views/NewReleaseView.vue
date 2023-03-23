@@ -68,6 +68,7 @@ function toggle(e: Event, payment: Payment) {
 }
 
 function pick() {
+  lastError.value = undefined
   mode.value = 'pick'
 }
 
@@ -101,15 +102,18 @@ init()
 
 <template>
   <main>
-    <header>
+    <header class="title">
       <h2>New Release</h2>
     </header>
     <div class="pick" v-if="mode === 'pick'">
-      <p>Showing highest earnings transactions since {{ lastReleaseDate }}</p>
+      <div class="info">
+        <p>Showing highest earnings transactions since {{ lastReleaseDate }}</p>
+      </div>
       <form @submit.prevent="ready">
         <table>
           <thead>
             <tr>
+              <th></th>
               <th></th>
               <th>Hash</th>
               <th>Recipient</th>
@@ -143,13 +147,17 @@ init()
             </tr>
           </tbody>
         </table>
-        <button type="button" :disabled="!canLoadMore" @click="loadMore">Load more</button>
-        <button type="submit" :disabled="canCheckMore">Ready</button>
+        <div class="actions">
+          <button type="button" :disabled="!canLoadMore" @click="loadMore">Load more</button>
+          <button type="submit" :disabled="canCheckMore">Ready</button>
+        </div>
       </form>
     </div>
     <div class="ready" v-if="mode === 'ready'">
-      <p>Showing selected earnings transactions since {{ lastReleaseDate }}</p>
-      <p>If you are satisfied with your selection, click <em>Submit</em> to proceed.</p>
+      <div class="info">
+        <p>Showing selected earnings transactions since {{ lastReleaseDate }}</p>
+        <p>If you are satisfied with your selection, click <em>Submit</em> to proceed.</p>
+      </div>
       <form @submit.prevent="submit">
         <table>
           <thead>
@@ -181,8 +189,10 @@ init()
             </tr>
           </tbody>
         </table>
-        <button type="button" @click="pick">Back</button>
-        <button type="submit">Submit</button>
+        <div class="actions">
+          <button type="button" @click="pick">Back</button>
+          <button type="submit">Submit</button>
+        </div>
       </form>
     </div>
     <div class="error" v-if="lastError">

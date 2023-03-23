@@ -1,0 +1,153 @@
+$color-bg: #fafafa;
+$color-bg-light: #ffffff;
+$color-edge-green: #0ecc5f;
+$color-grey: #b0b0b0;
+$color-red: #ff0000;
+$color-text: #1d1d1d;
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: $color-bg;
+  color: $color-text;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, ol, ul {
+  margin: 0;
+}
+
+a {
+  color: $color-edge-green;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+
+  th, td {
+    margin: 0;
+  }
+
+  th {
+    font-size: 0.8rem;
+    text-align: left;
+  }
+
+  td {
+    padding: 0.4rem 0.2rem;
+  }
+
+  tr {
+    margin-bottom: 0.2rem;
+  }
+
+  tbody tr {
+    td:first-child {
+      border-radius: 0.2rem 0 0 0.2rem;
+    }
+
+    td:last-child {
+      border-radius: 0 0.2rem 0.2rem 0;
+    }
+
+    &:nth-child(2n+1) {
+      background-color: $color-bg-light;
+    }
+  }
+}
+
+.top {
+  background: $color-text;
+  color: $color-bg;
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+
+  .appname {
+    color: $color-edge-green;
+    font-size: 1rem;
+    margin-right: 2rem;
+  }
+
+  .primary-menu a {
+    color: $color-bg;
+    margin-right: 1rem;
+  }
+}
+
+main {
+  padding: 1rem;
+
+  .title {
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+  }
+
+  .info {
+    background: $color-bg-light;
+    border: 0.1rem solid $color-edge-green;
+    border-radius: 0.2rem;
+    margin: 1rem 0;
+    padding: 1rem 1rem 0.5rem;
+
+    p {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+
+  button {
+    background: $color-bg-light;
+    border: 0.1rem solid $color-text;
+    border-radius: 0.2rem;
+    color: $color-text;
+    font: inherit;
+    margin-right: 0.5rem;
+    padding: 0.2rem 0.5rem;
+
+    &[disabled] {
+      border-color: $color-grey;
+      color: $color-grey;
+    }
+
+    &:hover:not([disabled]) {
+      background-color: $color-edge-green;
+      border-color: $color-edge-green;
+      color: $color-bg;
+      cursor: pointer;
+    }
+  }
+}
+
+.error {
+  background: $color-bg-light;
+  border: 0.1rem solid $color-red;
+  border-radius: 0.2rem;
+  color: $color-red;
+  margin: 1rem 0;
+  padding: 1rem;
+}
