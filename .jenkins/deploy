@@ -122,21 +122,21 @@ pipeline {
       }
     }
   }
-  // post {
-  //   success {
-  //     script {
-  //       discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) has been deployed", result: "SUCCESS", webhookURL: DISCORD_DEPLOY_WEBHOOK
-  //     }
-  //   }
-  //   failure {
-  //     script {
-  //       discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) failed to deploy", result: "FAILURE", webhookURL: DISCORD_DEPLOY_WEBHOOK
-  //     }
-  //   }
-  //   aborted {
-  //     script {
-  //       discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) was aborted", result: "ABORTED", webhookURL: DISCORD_DEPLOY_WEBHOOK
-  //     }
-  //   }
-  // }
+  post {
+    success {
+      script {
+        discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) has been deployed", result: "SUCCESS", webhookURL: DISCORD_DEPLOY_WEBHOOK
+      }
+    }
+    failure {
+      script {
+        discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) failed to deploy", result: "FAILURE", webhookURL: DISCORD_DEPLOY_WEBHOOK
+      }
+    }
+    aborted {
+      script {
+        discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) was aborted", result: "ABORTED", webhookURL: DISCORD_DEPLOY_WEBHOOK
+      }
+    }
+  }
 }
