@@ -10,7 +10,7 @@ export const build = {
 }
 
 export const initBuild = (app: App) => {
-  app.use(a => {
+  app.use((a) => {
     a.provide('build', build)
   })
 }

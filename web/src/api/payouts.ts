@@ -9,10 +9,11 @@ export type Payout = {
   block?: Pick<xe.block.Block, 'hash' | 'height'>
 }
 
-export type PayoutTx = Omit<xe.tx.Tx, 'hash' | 'signature'> & Partial<Pick<xe.tx.Tx, 'hash' | 'signature'>> & {
-  data: xe.tx.TxData & {
-    ref: string
+export type PayoutTx = Omit<xe.tx.Tx, 'hash' | 'signature'> &
+  Partial<Pick<xe.tx.Tx, 'hash' | 'signature'>> & {
+    data: xe.tx.TxData & {
+      ref: string
+    }
   }
-}
 
 export type PayoutStatus = 'unsent' | 'pending' | 'processing' | 'confirmed'

@@ -5,7 +5,7 @@ import { type Config, get as getConfig } from '@/api/config'
 
 export const initConfig = async (app: App) => {
   const config = await getConfig(build.api.host)
-  app.use(a => {
+  app.use((a) => {
     a.provide('config', config)
   })
 }

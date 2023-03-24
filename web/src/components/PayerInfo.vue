@@ -11,10 +11,10 @@ const { payer } = storeToRefs(usePayer())
   <div class="payer" v-if="payer !== undefined">
     <span class="address">
       Payer:
-      <AddressLink :address="payer.address"/>
+      <AddressLink :address="payer.address" />
     </span>
     <span class="balance">
-      <XEAmount :mxe="payer.balance"/>
+      <XEAmount :mxe="payer.balance" />
     </span>
   </div>
 </template>

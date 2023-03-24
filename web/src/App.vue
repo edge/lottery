@@ -7,7 +7,7 @@ import { RouterView } from 'vue-router'
 <template>
   <header class="top">
     <h1 class="appname">Edge Lottery</h1>
-    <PrimaryMenu/>
+    <PrimaryMenu />
   </header>
 
   <RouterView />

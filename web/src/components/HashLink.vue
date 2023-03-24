@@ -15,12 +15,7 @@ const href = computed(() => `${build.explorer.host}/transaction/${props.hash}`)
 </script>
 
 <template>
-  <a
-    class="hash-link"
-    target="_blank"
-    :href="href"
-    :title="hash"
-  >
+  <a class="hash-link" target="_blank" :href="href" :title="hash">
     <span>{{ hash.slice(0, length) }}</span>
   </a>
 </template>

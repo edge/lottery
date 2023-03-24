@@ -15,12 +15,7 @@ const href = computed(() => `${build.explorer.host}/wallet/${props.address}`)
 </script>
 
 <template>
-  <a
-    class="address-link"
-    target="_blank"
-    :href="href"
-    :title="address"
-  >
+  <a class="address-link" target="_blank" :href="href" :title="address">
     <span>{{ address.slice(0, length) }}</span>
   </a>
 </template>

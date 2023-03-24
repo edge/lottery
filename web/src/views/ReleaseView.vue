@@ -48,20 +48,18 @@ load()
       <tbody>
         <tr v-for="winner in release?.winners" v-bind:key="winner.hash">
           <td class="winningHash">
-            <HashLink :hash="winner.hash"/>
+            <HashLink :hash="winner.hash" />
           </td>
           <td class="recipient">
-            <AddressLink :address="winner.recipient"/>
+            <AddressLink :address="winner.recipient" />
           </td>
           <td class="amount">
-            <XEAmount :mxe="winner.amount"/>
+            <XEAmount :mxe="winner.amount" />
           </td>
           <td class="payoutHash" v-if="getPayout(winner).tx.hash">
-            <HashLink :hash="(getPayout(winner).tx.hash as string)"/>
+            <HashLink :hash="(getPayout(winner).tx.hash as string)" />
           </td>
-          <td class="payoutHash" v-else>
-            TBC
-          </td>
+          <td class="payoutHash" v-else>TBC</td>
           <td class="payoutStatus">
             {{ getPayout(winner).status }}
           </td>

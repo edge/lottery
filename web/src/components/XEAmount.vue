@@ -8,7 +8,7 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const xeAmount = computed(() => props.mxe !== undefined ? props.mxe / 1e6 : props.xe)
+const xeAmount = computed(() => (props.mxe !== undefined ? props.mxe / 1e6 : props.xe))
 </script>
 
 <template>

@@ -11,7 +11,7 @@ export const usePayer = defineStore('payer', () => {
     payer.value = res.payer
   }
 
-  reload().catch(err => console.error(err))
+  reload().catch((err) => console.error(err))
 
   return { payer, reload }
 })

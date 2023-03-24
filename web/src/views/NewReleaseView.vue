@@ -43,7 +43,7 @@ async function init() {
   const res = await earnings.listHighestPayments(build.api.host, { limit: maxChecked.value })
   totalCount.value = res.metadata.totalCount
   payments.push(...res.results)
-  res.results.forEach(payment => {
+  res.results.forEach((payment) => {
     checked[payment.hash] = payment
   })
 }
@@ -129,17 +129,17 @@ init()
                   type="checkbox"
                   :checked="isChecked(payment)"
                   :disabled="!isChecked(payment) && !canCheckMore"
-                  @change.prevent="e => toggle(e, payment)"
+                  @change.prevent="(e) => toggle(e, payment)"
                 />
               </td>
               <td class="hash">
-                <HashLink :hash="payment.hash"/>
+                <HashLink :hash="payment.hash" />
               </td>
               <td class="recipient">
-                <AddressLink :address="payment.recipient"/>
+                <AddressLink :address="payment.recipient" />
               </td>
               <td class="amount">
-                <XEAmount :mxe="payment.amount"/>
+                <XEAmount :mxe="payment.amount" />
               </td>
               <td class="memo">
                 {{ payment.data.memo }}
@@ -172,19 +172,19 @@ init()
           <tbody>
             <tr v-for="(payment, i) in checkedList" v-bind:key="payment.hash">
               <td class="hash">
-                <HashLink :hash="payment.hash"/>
+                <HashLink :hash="payment.hash" />
               </td>
               <td class="recipient">
-                <AddressLink :address="payment.recipient"/>
+                <AddressLink :address="payment.recipient" />
               </td>
               <td class="amount">
-                <XEAmount :mxe="payment.amount"/>
+                <XEAmount :mxe="payment.amount" />
               </td>
               <td class="memo">
                 {{ payment.data.memo }}
               </td>
               <td class="winnings">
-                <XEAmount :mxe="config.funds.distribution[i]"/>
+                <XEAmount :mxe="config.funds.distribution[i]" />
               </td>
             </tr>
           </tbody>

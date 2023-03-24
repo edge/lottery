@@ -18,4 +18,4 @@ async function init() {
   app.mount('#app')
 }
 
-init().catch(err => console.error(err))
+init().catch((err) => console.error(err))

@@ -43,13 +43,15 @@ init()
       <tbody>
         <tr v-for="release in releases" v-bind:key="release._key">
           <td class="timestamp">
-            <RouterLink :to="`/releases/${release._key}`">{{ formatTimestamp(release.timestamp) }}</RouterLink>
+            <RouterLink :to="`/releases/${release._key}`">{{
+              formatTimestamp(release.timestamp)
+            }}</RouterLink>
           </td>
           <td class="numWinners">
             {{ release.winners.length }}
           </td>
           <td class="amount">
-            <XEAmount :mxe="totalAmount(release)"/>
+            <XEAmount :mxe="totalAmount(release)" />
           </td>
         </tr>
       </tbody>
