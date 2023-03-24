@@ -84,7 +84,6 @@ const createLogger = ({ config }: Context) => {
 }
 
 const main = async (config: Config) => {
-  console.log(config, process.env)
   const ctx = <Context>{ config }
 
   ctx.log = createLogger(ctx)
