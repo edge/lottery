@@ -4,6 +4,7 @@
 
 import { EarningsPayment } from './db'
 
+/** Present an earnings payment safely through API. */
 export const present = (p: EarningsPayment) => ({
   sender: p.sender,
   recipient: p.recipient,

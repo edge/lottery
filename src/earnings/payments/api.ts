@@ -20,6 +20,7 @@ const sortFields: (keyof EarningsPayment)[] = [
   'timestamp'
 ]
 
+/** List node earnings payments. */
 export const list = ({ model }: Context): RequestHandler => async (req, res, next) => {
   const limit = query.integer(req.query.limit, 1, 100) || 10
   const page = query.integer(req.query.page, 1) || 1
@@ -69,6 +70,11 @@ export const list = ({ model }: Context): RequestHandler => async (req, res, nex
   }
 }
 
+/**
+ * List node earnings payments, sorted by highest hash.
+ * This API does not support sorting or filtering, but it does allow pagination with `skip` instead of `page`
+ * so it can be reliably paginated irrespective of any difference between the request limit and funds distribution.
+ */
 export const listHighest = ({ config, model }: Context): RequestHandler => async (req, res, next) => {
   const limit = query.integer(req.query.limit, 1, 100) || 10
   const page = query.integer(req.query.page, 1) || 1

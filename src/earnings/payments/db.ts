@@ -10,12 +10,21 @@ import { aql } from 'arangojs'
 import arangosearch from 'arangosearch'
 import { DeepNonNullable, Limit, Terms } from 'arangosearch'
 
+/** Model for managing and searching earnings payments. */
 export type EarningsPaymentsModel = ReturnType<typeof model>
 
+/** Earnings payment transaction. */
 export type EarningsPayment = xe.tx.Tx
 
+/** Set the ArangoDB `_key` for an earnings payment. */
 const key = (p: EarningsPayment): Key & EarningsPayment => ({ ...p, _key: p.hash })
 
+/**
+ * Simplified search that sorts earnings payments by highest hash.
+ *
+ * Determining the highest hash is comparable to golf scoring: it is higher the closer it is to containing all zeroes,
+ * starting from the beginning of the hash. Ergo `"0f"` is higher than `"10"`.
+ */
 const searchHighest = ({ db }: Context) => async (terms?: Terms<DeepNonNullable<EarningsPayment>>, limit?: Limit) => {
   type Data = {
     totalCount: number
@@ -53,6 +62,7 @@ const searchHighest = ({ db }: Context) => async (terms?: Terms<DeepNonNullable<
   return await (await db.query(query)).next() as Data
 }
 
+/** Create an earnings payments model. */
 const model = (ctx: Context) => {
   const ep = ctx.db.collection<EarningsPayment>('earningsPayments')
 

@@ -12,6 +12,7 @@ import { sep } from 'path'
 import express, { ErrorRequestHandler, RequestHandler } from 'express'
 import { readFile, stat } from 'fs/promises'
 
+/** Configuration API. */
 const config = ({ config, model }: Context): RequestHandler => async (req, res, next) => {
   try {
     const lastDraw = await model.draws.find(undefined, ['timestamp', 'DESC'])

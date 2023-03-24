@@ -8,8 +8,10 @@ import arangosearch from 'arangosearch'
 import { BlockID, BlockTx } from '@edge/xe-sync'
 import { Key, Update, isArangoError } from '../db'
 
+/** Model for managing and searching lottery payouts. */
 export type PayoutsModel = ReturnType<typeof model>
 
+/** Lottery payout. */
 export type Payout = {
   attempts?: number
   lastResponse?: string
@@ -19,16 +21,28 @@ export type Payout = {
   block?: BlockID
 }
 
+/**
+ * Lottery payout transaction.
+ * Essentially just a blockchain transaction but `data.ref` is required, which should contain the hash of the winning
+ * transaction to which it pertains.
+ */
 export type PayoutTx = Omit<xe.tx.Tx, 'hash' | 'signature'> & Partial<Pick<xe.tx.Tx, 'hash' | 'signature'>> & {
   data: xe.tx.TxData & {
     ref: string
   }
 }
 
+/** Payout status in blockchain. */
 export type PayoutStatus = 'unsent' | 'pending' | 'processing' | 'confirmed'
 
+/**
+ * Add ArangoDB `_key` to a payout.
+ * The winning transaction hash (as `tx.data.ref`) is used as the key for cross-referential purposes.
+ * Be mindful that the payout transaction's own hash (`tx.hash`) is different.
+ */
 const key = (p: Payout): Key & Payout => ({ ...p, _key: p.tx.data.ref })
 
+/** Create a lottery payouts model. */
 const model = (ctx: Context) => {
   const ep = ctx.db.collection<Payout>('payouts')
 

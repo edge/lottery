@@ -5,8 +5,10 @@
 import * as xe from '@edge/xe-utils'
 import { Context } from '../main'
 
+/** Payer access. */
 export type Payer = ReturnType<typeof payer>
 
+/** Create a context object providing global access to the payer. */
 export const payer = ({ config }: Context) => {
   let info: xe.wallet.WalletInfo | undefined
 

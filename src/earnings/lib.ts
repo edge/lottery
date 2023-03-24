@@ -6,6 +6,7 @@ import * as xe from '@edge/xe-utils'
 import { toQueryString } from '../lib'
 import superagent, { SuperAgentRequest } from 'superagent'
 
+/** Query parameters for earnings payments request. */
 export type ListParams = {
   limit?: number
   maxAttempts?: number
@@ -17,6 +18,7 @@ export type ListParams = {
   until?: number
 }
 
+/** Earnings payments response from Earnings Oracle. */
 export type ListResponse = {
   results: Payment[]
   metadata: {
@@ -33,6 +35,10 @@ export type ListResponse = {
   }
 }
 
+/**
+ * Payment type in Earnings Oracle.
+ * Includes some additional metadata not used in lottery code.
+ */
 export type Payment = {
   ref: string
   start: number
@@ -43,21 +49,13 @@ export type Payment = {
   tx: Omit<xe.tx.Tx, 'hash' | 'signature'> & Partial<Pick<xe.tx.Tx, 'hash' | 'signature'>>
 }
 
+/** Payment statuses in Earnings Oracle. */
 export type PaymentStatus = 'unsent' | 'pending' | 'processed' | 'confirmed'
 
-/**
- * Callback function allowing a SuperAgent HTTP request to be modified before it is sent.
- * For example, you may want to specify a 100ms request timeout while fetching transactions:
- *
- * ```
- * const txs = await tx.transactions('https://api.xe.network', undefined, r => r.timeout(100))
- * ```
- *
- * This approach enables user code to alter request behaviour using SuperAgent's API:
- * https://visionmedia.github.io/superagent/
- */
+/** Callback function allowing a SuperAgent HTTP request to be modified before it is sent. */
 export type RequestCallback = (r: SuperAgentRequest) => SuperAgentRequest
 
+/** Retrieve a list of earnings payments from Earnings Oracle. */
 export const list = async (host: string, params?: ListParams, cb?: RequestCallback): Promise<ListResponse> => {
   let url = `${host}/payments`
   if (params) url += `?${toQueryString(params)}`

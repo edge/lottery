@@ -19,6 +19,7 @@ const MONTH = [
   'July', 'August', 'September', 'October', 'November', 'December'
 ]
 
+/** Format date for memo. */
 const toMemoDate = (timestamp: number) => {
   const d = new Date(timestamp)
   const m = MONTH[d.getUTCMonth()]
@@ -26,11 +27,13 @@ const toMemoDate = (timestamp: number) => {
   return `${m} ${y}`
 }
 
+/** Create a new draw. */
 export const create = ({ config, model, payer, log }: Context): RequestHandler => {
   type Data = {
     draw: Pick<Draw, 'winners'>
   }
 
+  // basic input validation
   const readBody = validate.validate<Data>({
     draw: {
       winners: arr => {
@@ -125,13 +128,14 @@ export const create = ({ config, model, payer, log }: Context): RequestHandler =
       else return next(err)
     }
 
-    // check funds
+    // check payer is funded
     const info = await payer.refresh()
     if (info.balance < config.funds.distribution.reduce((a, b) => a + b)) {
       return sdkHttp.paymentRequired(res, next, { reason: 'insufficient payer funds' })
     }
 
     // attach highest hashes snapshot to draw
+    // this is not used heavily, just retained for future reference in case of any dispute
     try {
       const { results: highest } = await model.earningsPayments.searchHighest(
         { timestamp: { gte: since } },
@@ -153,6 +157,7 @@ export const create = ({ config, model, payer, log }: Context): RequestHandler =
     try {
       const doc = await model.draws.insert(draw)
 
+      // generate payout transactions (which will be signed later)
       const unsigned = draw.winners.map<PayoutTx>(w => ({
         timestamp: draw.timestamp,
         sender: config.funds.payer.address,
@@ -164,7 +169,6 @@ export const create = ({ config, model, payer, log }: Context): RequestHandler =
           memo: `Lottery Winnings ${memoDate}`
         }
       }))
-
       const payouts = unsigned.map<Partial<DocumentMetadata> & Payout>(tx => ({
         draw: doc._key,
         status: 'unsent',
@@ -190,6 +194,7 @@ export const create = ({ config, model, payer, log }: Context): RequestHandler =
   }
 }
 
+/** Retrieve a draw. */
 export const get = ({ model }: Context): RequestHandler => async (req, res, next) => {
   const key = query.str(req.params.key)
   if (!key) return sdkHttp.badRequest(res, next, { reason: 'invalid key' })
@@ -212,6 +217,7 @@ export const get = ({ model }: Context): RequestHandler => async (req, res, next
   }
 }
 
+/** List draws. */
 export const list = ({ model }: Context): RequestHandler => async (req, res, next) => {
   const limit = query.integer(req.query.limit, 1, 100) || 10
   const page = query.integer(req.query.page, 1) || 1

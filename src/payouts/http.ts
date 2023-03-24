@@ -4,6 +4,7 @@
 
 import { Payout } from './db'
 
+/** Present a lottery payout safely through API. */
 export const present = (p: Payout) => ({
   draw: p.draw,
   status: p.status,

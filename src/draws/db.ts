@@ -7,16 +7,20 @@ import { EarningsPayment } from '../earnings/payments/db'
 import arangosearch from 'arangosearch'
 import { newDoc } from '../db'
 
+/** Model for managing and searching draws. */
 export type DrawsModel = ReturnType<typeof model>
 
+/** A draw represents a set of lottery winners at a given time. */
 export type Draw = {
   timestamp: number
   winners: Winner[]
   highestHashes: Pick<EarningsPayment, 'hash' | 'recipient'>[]
 }
 
+/** Lottery winner, with reference to the winning transaction hash. */
 export type Winner = Pick<EarningsPayment, 'amount' | 'hash' | 'recipient'>
 
+/** Create a draws model. */
 const model = (ctx: Context) => {
   const r = ctx.db.collection<Draw>('draws')
 

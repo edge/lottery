@@ -7,6 +7,7 @@ import { Context } from '../main'
 import { Key, Update, isArangoError } from '../db'
 import { Payout, PayoutTx } from './db'
 
+/** Confirm lottery payouts on the blockchain. */
 export const confirm = ({ config, model, log }: Context) => async () => {
   const tip = await model.blocks.tip()
   if (tip === undefined) {
@@ -44,6 +45,7 @@ export const confirm = ({ config, model, log }: Context) => async () => {
   log.info('updated payouts', { num: results.length - errors.length, errors: errors.length })
 }
 
+/** Submit lottery payouts to the blockchain. */
 export const submit = ({ config, model, payer, log }: Context) => async () => {
   const [, ps] = await model.payouts.search({ status: { eq: 'unsent' } }, [config.payout.submit.batchSize])
   if (ps.length === 0) {

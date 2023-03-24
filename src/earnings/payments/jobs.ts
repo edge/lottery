@@ -7,6 +7,10 @@ import { Context } from '../../main'
 import { EarningsPayment } from './db'
 import { isArangoError } from '../../db'
 
+/**
+ * Synchronise earnings payments from the Earnings Oracle, rather than directly from blockchain.
+ * This route provides extra assurance that those payments are legitimate lottery candidates.
+ */
 export const sync = ({ config, model, log }: Context) => async () => {
   const latest = await model.earningsPayments.find(undefined, ['timestamp', 'DESC'])
   const since = latest?.timestamp || config.startTime
