@@ -3,7 +3,7 @@ import { EarningsPayment } from './db'
 import { Key } from '../../db'
 import { RequestHandler } from 'express'
 import { present } from './http'
-import { query } from '@edge/api-sdk'
+import { query } from '@edge/misc-utils'
 import { DeepNonNullable, Terms } from 'arangosearch'
 
 const sortFields: (keyof EarningsPayment)[] = [

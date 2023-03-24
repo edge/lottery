@@ -5,7 +5,7 @@
 import { Database } from 'arangojs'
 import api from './api'
 import createJobs from './jobs'
-import { cycle } from '@edge/api-sdk'
+import { cycle } from '@edge/misc-utils'
 import { Log, LogLevelFromString, StdioAdaptor } from '@edge/log'
 import { Models, connectDatabase, initDatabase } from './db'
 import { Payer, payer } from './payer'

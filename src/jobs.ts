@@ -7,7 +7,7 @@ import * as earningsPayments from './earnings/payments/jobs'
 import * as payouts from './payouts/jobs'
 import { Context } from './main'
 import { Log } from '@edge/log'
-import { cycle } from '@edge/api-sdk'
+import { cycle } from '@edge/misc-utils'
 import { omit } from 'lodash'
 
 type JobSetup = (ctx: Context) => cycle.Job | undefined

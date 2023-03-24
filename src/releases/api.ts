@@ -8,7 +8,7 @@ import { Document, DocumentMetadata } from 'arangojs/documents'
 import { Key, isArangoError, isArangoNotFound } from '../db'
 import { Payout, PayoutTx } from '../payouts/db'
 import { Release, Winner } from './db'
-import { identity, query, http as sdkHttp, unique, validate } from '@edge/api-sdk'
+import { identity, query, http as sdkHttp, unique, validate } from '@edge/misc-utils'
 
 const MONTH = [
   'January', 'February', 'March', 'April', 'May', 'June',
