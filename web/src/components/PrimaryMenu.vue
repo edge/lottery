@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 
 <template>
   <nav class="primary-menu">
-    <RouterLink to="/releases">Past Releases</RouterLink>
-    <RouterLink to="/releases/new">New Release</RouterLink>
+    <RouterLink to="/draws">Past Draws</RouterLink>
+    <RouterLink to="/draws/new">New Draw</RouterLink>
   </nav>
 </template>

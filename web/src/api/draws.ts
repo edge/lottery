@@ -3,37 +3,37 @@ import superagent from 'superagent'
 import { type RequestCallback, toQueryString } from '.'
 
 export type CreateRequest = {
-  release: Pick<Release, 'winners'>
+  draw: Pick<Draw, 'winners'>
 }
 
 export type CreateResponse = {
-  release: Release
+  draw: Draw
 }
 
-export type GetReleaseResponse = {
-  release: Release
+export type GetDrawResponse = {
+  draw: Draw
   payouts: Record<string, Payout>
 }
 
-export type ListReleasesParams = {
+export type ListDrawsParams = {
   limit?: number
   page?: number
   since?: number
   until?: number
 }
 
-export type ListReleasesResponse = {
-  results: Release[]
+export type ListDrawsResponse = {
+  results: Draw[]
   metadata: {
     count: number
     limit: number
     skip: number
-    terms?: Record<keyof ListReleasesParams, Record<string, string>>
+    terms?: Record<keyof ListDrawsParams, Record<string, string>>
     totalCount: number
   }
 }
 
-export type Release = {
+export type Draw = {
   _key: string
   timestamp: number
   winners: Winner[]
@@ -51,7 +51,7 @@ export const create = async (
   data?: CreateRequest,
   cb?: RequestCallback
 ): Promise<CreateResponse> => {
-  const url = `${host}/releases`
+  const url = `${host}/draws`
   const req = superagent.post(url).send(data)
   const res = cb === undefined ? await req : await cb(req)
   return res.body
@@ -61,8 +61,8 @@ export const get = async (
   host: string,
   key: string,
   cb?: RequestCallback
-): Promise<GetReleaseResponse> => {
-  const url = `${host}/releases/${key}`
+): Promise<GetDrawResponse> => {
+  const url = `${host}/draws/${key}`
   const req = superagent.get(url)
   const res = cb === undefined ? await req : await cb(req)
   return res.body
@@ -70,10 +70,10 @@ export const get = async (
 
 export const list = async (
   host: string,
-  params?: ListReleasesParams,
+  params?: ListDrawsParams,
   cb?: RequestCallback
-): Promise<ListReleasesResponse> => {
-  let url = `${host}/releases`
+): Promise<ListDrawsResponse> => {
+  let url = `${host}/draws`
   if (params) url += `?${toQueryString(params)}`
   const req = superagent.get(url)
   const res = cb === undefined ? await req : await cb(req)

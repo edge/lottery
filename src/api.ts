@@ -2,26 +2,26 @@
 // Use of this source code is governed by a GNU GPL-style license
 // that can be found in the LICENSE.md file. All rights reserved.
 
+import * as draws from './draws/api'
 import * as earningsPayments from './earnings/payments/api'
 import * as payer from './payer/api'
-import * as releases from './releases/api'
 import { Context } from './main'
 import Package from '../package.json'
 import cors from 'cors'
-import { readFile, stat } from 'fs/promises'
 import { sep } from 'path'
 import express, { ErrorRequestHandler, RequestHandler } from 'express'
+import { readFile, stat } from 'fs/promises'
 
 const config = ({ config, model }: Context): RequestHandler => async (req, res, next) => {
   try {
-    const lastRelease = await model.releases.find(undefined, ['timestamp', 'DESC'])
-    const since = lastRelease?.timestamp || config.startTime
+    const lastDraw = await model.draws.find(undefined, ['timestamp', 'DESC'])
+    const since = lastDraw?.timestamp || config.startTime
 
     res.json({
       funds: {
         distribution: config.funds.distribution
       },
-      nextRelease: {
+      nextDraw: {
         since
       }
     })
@@ -69,16 +69,15 @@ export default async (ctx: Context) => {
   app.use(express.json())
 
   app.get('/api/config', config(ctx))
+  app.get('/api/payer', payer.get(ctx))
   app.get('/api/version', version)
+
+  app.post('/api/draws', draws.create(ctx))
+  app.get('/api/draws', draws.list(ctx))
+  app.get('/api/draws/:key', draws.get(ctx))
 
   app.get('/api/earnings/payments', earningsPayments.list(ctx))
   app.get('/api/earnings/payments/highest', earningsPayments.listHighest(ctx))
-
-  app.get('/api/payer', payer.get(ctx))
-
-  app.post('/api/releases', releases.create(ctx))
-  app.get('/api/releases', releases.list(ctx))
-  app.get('/api/releases/:key', releases.get(ctx))
 
   // static content fallback for admin pwa, including forwarding to index
   const fileRegexp = /\.[a-zA-Z]*$/

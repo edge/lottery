@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as earnings from '@/api/earnings'
-import * as releases from '@/api/releases'
+import * as draws from '@/api/draws'
 import AddressLink from '@/components/AddressLink.vue'
 import HashLink from '@/components/HashLink.vue'
 import type { Payment } from '@/api/earnings'
@@ -30,7 +30,7 @@ const totalCount = ref(0)
 const canCheckMore = computed(() => Object.keys(checked).length < maxChecked.value)
 const canLoadMore = computed(() => skip.value < totalCount.value)
 const checkedList = computed(() => Object.values(checked))
-const lastReleaseDate = computed(() => formatTimestamp(config.nextRelease.since))
+const lastDrawDate = computed(() => formatTimestamp(config.nextDraw.since))
 
 function reset() {
   for (const hash in checked) delete checked[hash]
@@ -87,9 +87,9 @@ async function submit() {
   })
 
   try {
-    const res = await releases.create(build.api.host, { release: { winners } })
+    const res = await draws.create(build.api.host, { draw: { winners } })
     await reloadConfig()
-    router.push(`/releases/${res.release._key}`)
+    router.push(`/draws/${res.draw._key}`)
   }
   catch (err) {
     lastError.value = err as Error
@@ -103,11 +103,11 @@ init()
 <template>
   <main>
     <header class="title">
-      <h2>New Release</h2>
+      <h2>New Draw</h2>
     </header>
     <div class="pick" v-if="mode === 'pick'">
       <div class="info">
-        <p>Showing highest earnings transactions since {{ lastReleaseDate }}</p>
+        <p>Showing highest earnings transactions since {{ lastDrawDate }}</p>
       </div>
       <form @submit.prevent="ready">
         <table>
@@ -155,7 +155,7 @@ init()
     </div>
     <div class="ready" v-if="mode === 'ready'">
       <div class="info">
-        <p>Showing selected earnings transactions since {{ lastReleaseDate }}</p>
+        <p>Showing selected earnings transactions since {{ lastDrawDate }}</p>
         <p>If you are satisfied with your selection, click <em>Submit</em> to proceed.</p>
       </div>
       <form @submit.prevent="submit">

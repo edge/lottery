@@ -1,6 +1,6 @@
-import NewReleaseView from '@/views/NewReleaseView.vue'
-import PastReleasesView from '@/views/PastReleasesView.vue'
-import ReleaseView from '@/views/ReleaseView.vue'
+import DrawView from '@/views/DrawView.vue'
+import NewDrawView from '@/views/NewDrawView.vue'
+import PastDrawsView from '@/views/PastDrawsView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -9,22 +9,22 @@ const router = createRouter({
     {
       path: '/',
       name: 'Dashboard',
-      component: PastReleasesView
+      component: PastDrawsView
     },
     {
-      path: '/releases/new',
-      name: 'New Release',
-      component: NewReleaseView
+      path: '/draws/new',
+      name: 'New Draw',
+      component: NewDrawView
     },
     {
-      path: '/releases',
-      name: 'Past Releases',
-      component: PastReleasesView
+      path: '/draws',
+      name: 'Past Draws',
+      component: PastDrawsView
     },
     {
-      path: '/releases/:key',
-      name: 'Release',
-      component: ReleaseView
+      path: '/draws/:key',
+      name: 'Draw',
+      component: DrawView
     }
   ]
 })

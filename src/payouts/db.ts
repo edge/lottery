@@ -9,7 +9,7 @@ export type PayoutsModel = ReturnType<typeof model>
 export type Payout = {
   attempts?: number
   lastResponse?: string
-  release: string
+  draw: string
   status: PayoutStatus
   tx: PayoutTx
   block?: BlockID

@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import type { Release } from '@/api/releases'
+import type { Draw } from '@/api/draws'
 import XEAmount from '@/components/XEAmount.vue'
 import { formatTimestamp } from '@/lib'
-import { list as listReleases } from '@/api/releases'
+import { list as listDraws } from '@/api/draws'
 import { reactive } from 'vue'
 import { useBuild } from '@/stores/build'
 
 const build = useBuild()
 
-const releases = reactive<Release[]>([])
+const draws = reactive<Draw[]>([])
 
 function reset() {
-  while (releases.length > 0) releases.pop()
+  while (draws.length > 0) draws.pop()
 }
 
 async function init() {
   reset()
-  const res = await listReleases(build.api.host)
-  releases.push(...res.results)
+  const res = await listDraws(build.api.host)
+  draws.push(...res.results)
 }
 
-function totalAmount(release: Release) {
-  return release.winners.reduce((tot, w) => tot + w.amount, 0)
+function totalAmount(draw: Draw) {
+  return draw.winners.reduce((tot, w) => tot + w.amount, 0)
 }
 
 init()
@@ -30,7 +30,7 @@ init()
 <template>
   <main>
     <header class="title">
-      <h2>Past Releases</h2>
+      <h2>Past Draws</h2>
     </header>
     <table>
       <thead>
@@ -41,17 +41,17 @@ init()
         </tr>
       </thead>
       <tbody>
-        <tr v-for="release in releases" v-bind:key="release._key">
+        <tr v-for="draw in draws" v-bind:key="draw._key">
           <td class="timestamp">
-            <RouterLink :to="`/releases/${release._key}`">{{
-              formatTimestamp(release.timestamp)
+            <RouterLink :to="`/draws/${draw._key}`">{{
+              formatTimestamp(draw.timestamp)
             }}</RouterLink>
           </td>
           <td class="numWinners">
-            {{ release.winners.length }}
+            {{ draw.winners.length }}
           </td>
           <td class="amount">
-            <XEAmount :mxe="totalAmount(release)" />
+            <XEAmount :mxe="totalAmount(draw)" />
           </td>
         </tr>
       </tbody>

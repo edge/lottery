@@ -5,7 +5,7 @@ export type Config = {
   funds: {
     distribution: number[]
   }
-  nextRelease: {
+  nextDraw: {
     since: number
   }
 }

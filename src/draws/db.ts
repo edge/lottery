@@ -3,9 +3,9 @@ import { EarningsPayment } from '../earnings/payments/db'
 import arangosearch from 'arangosearch'
 import { newDoc } from '../db'
 
-export type ReleasesModel = ReturnType<typeof model>
+export type DrawsModel = ReturnType<typeof model>
 
-export type Release = {
+export type Draw = {
   timestamp: number
   winners: Winner[]
   highestHashes: Pick<EarningsPayment, 'hash' | 'recipient'>[]
@@ -14,7 +14,7 @@ export type Release = {
 export type Winner = Pick<EarningsPayment, 'amount' | 'hash' | 'recipient'>
 
 const model = (ctx: Context) => {
-  const r = ctx.db.collection<Release>('releases')
+  const r = ctx.db.collection<Draw>('draws')
 
   return {
     init: async () => {
@@ -22,7 +22,7 @@ const model = (ctx: Context) => {
     },
     find: arangosearch.find(ctx.db, r),
     get: (key: string) => r.document(key),
-    insert: (release: Release) => r.save(release, { returnNew: true }).then(newDoc),
+    insert: (d: Draw) => r.save(d, { returnNew: true }).then(newDoc),
     search: arangosearch.search(ctx.db, r)
   }
 }

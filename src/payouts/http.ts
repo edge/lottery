@@ -1,7 +1,7 @@
 import { Payout } from './db'
 
 export const present = (p: Payout) => ({
-  release: p.release,
+  draw: p.draw,
   status: p.status,
   tx: {
     sender: p.tx.sender,

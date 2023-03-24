@@ -71,8 +71,8 @@ export const listHighest = ({ config, model }: Context): RequestHandler => async
   const skip = query.integer(req.query.skip, 0) || limit * (page - 1)
 
   try {
-    const lastRelease = await model.releases.find(undefined, ['timestamp', 'DESC'])
-    const since = lastRelease?.timestamp || config.startTime
+    const lastDraw = await model.draws.find(undefined, ['timestamp', 'DESC'])
+    const since = lastDraw?.timestamp || config.startTime
 
     const terms: Terms<Key & DeepNonNullable<EarningsPayment>> = {
       timestamp: { gte: since }

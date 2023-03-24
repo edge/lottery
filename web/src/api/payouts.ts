@@ -3,7 +3,7 @@ import type * as xe from '@edge/xe-utils'
 export type Payout = {
   attempts?: number
   lastResponse?: string
-  release: string
+  draw: string
   status: PayoutStatus
   tx: PayoutTx
   block?: Pick<xe.block.Block, 'hash' | 'height'>

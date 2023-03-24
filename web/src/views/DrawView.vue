@@ -4,21 +4,21 @@ import HashLink from '@/components/HashLink.vue'
 import type { Payout } from '@/api/payouts'
 import XEAmount from '@/components/XEAmount.vue'
 import { formatTimestamp } from '@/lib'
-import { get as getRelease } from '@/api/releases'
+import { get as getDraw } from '@/api/draws'
 import { useBuild } from '@/stores/build'
 import { useRoute } from 'vue-router'
-import type { Release, Winner } from '@/api/releases'
+import type { Draw, Winner } from '@/api/draws'
 import { reactive, ref } from 'vue'
 
 const build = useBuild()
 const route = useRoute()
 
-const release = ref<Release>()
+const draw = ref<Draw>()
 const payouts = reactive<Record<string, Payout>>({})
 
 async function load() {
-  const res = await getRelease(build.api.host, route.params.key as string)
-  release.value = res.release
+  const res = await getDraw(build.api.host, route.params.key as string)
+  draw.value = res.draw
   for (const hash in payouts) delete payouts[hash]
   for (const refHash in res.payouts) payouts[refHash] = res.payouts[refHash]
 }
@@ -33,7 +33,7 @@ load()
 <template>
   <main>
     <header class="title">
-      <h2>Release {{ release && formatTimestamp(release.timestamp) }} (#{{ release?._key }})</h2>
+      <h2>Draw {{ draw && formatTimestamp(draw.timestamp) }} (#{{ draw?._key }})</h2>
     </header>
     <table>
       <thead>
@@ -46,7 +46,7 @@ load()
         </tr>
       </thead>
       <tbody>
-        <tr v-for="winner in release?.winners" v-bind:key="winner.hash">
+        <tr v-for="winner in draw?.winners" v-bind:key="winner.hash">
           <td class="winningHash">
             <HashLink :hash="winner.hash" />
           </td>
