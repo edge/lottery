@@ -2,10 +2,10 @@ import { type App, inject } from 'vue'
 
 export const build = {
   api: {
-    host: 'http://localhost:8777/api'
+    host: import.meta.env.VITE_API_HOST || '/api'
   },
   explorer: {
-    host: 'https://test.network'
+    host: import.meta.env.VITE_EXPLORER_HOST || 'https://test.network'
   }
 }
 
