@@ -6,7 +6,7 @@ import { Database } from 'arangojs'
 import api from './api'
 import createJobs from './jobs'
 import { cycle } from '@edge/misc-utils'
-import { Log, LogLevelFromString, StdioAdaptor } from '@edge/log'
+import { Log, LogLevelFromString, NewRelicAdaptor, StdioAdaptor } from '@edge/log'
 import { Models, connectDatabase, initDatabase } from './db'
 import { Payer, payer } from './payer'
 
@@ -47,6 +47,11 @@ export type Config = {
   log: {
     level: string
   }
+  network: string
+  newrelic: {
+    apiKey: string
+    url: string
+  }
   payout: {
     confirm: {
       enabled: boolean
@@ -78,6 +83,9 @@ export type Context = {
 const createLogger = ({ config }: Context) => {
   const log = new Log()
   log.use(new StdioAdaptor(true))
+  if (config.newrelic.apiKey) {
+    log.use(new NewRelicAdaptor(config.newrelic, { network: config.network, serviceType: 'lottery' }))
+  }
   log.setLogLevel(LogLevelFromString(config.log.level))
   log.info('initialized logger')
   return log

@@ -48,6 +48,11 @@ main({
   log: {
     level: process.env.LOG_LEVEL || 'warn'
   },
+  network: process.env.NETWORK || 'testnet',
+  newrelic: {
+    apiKey: process.env.NEWRELIC_API_KEY || '',
+    url: process.env.NEWRELIC_URL || ''
+  },
   payout: {
     confirm: {
       enabled: TRUE.includes(process.env.PAYOUT_CONFIRM_ENABLED || 'yes'),

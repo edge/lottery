@@ -28,6 +28,8 @@ def deployScript() {
     --env HTTP_PORT=$HTTP_PORT \
     --env LETSENCRYPT_EMAIL="adam@edge.network" \
     --env LETSENCRYPT_HOST=$LETSENCRYPT_HOST \
+    --env NETWORK_ACCESS=$NETWORK_ACCESS \
+    --env NETWORK=$NETWORK \
     --env LOG_LEVEL=$LOG_LEVEL \
     --env ARANGODB_URL=$ARANGODB_URL \
     --env ARANGODB_USERNAME=$ARANGODB_USERNAME \
@@ -51,7 +53,6 @@ def deployScript() {
     --env PAYOUT_SUBMIT_ENABLED=$PAYOUT_SUBMIT_ENABLED \
     --env PAYOUT_SUBMIT_INTERVAL=$PAYOUT_SUBMIT_INTERVAL \
     --env START_TIME=$START_TIME \
-    --env NETWORK_ACCESS=$NETWORK_ACCESS \
     --env VIRTUAL_HOST=$VIRTUAL_HOST \
     --volume $NAME-data:/data \
     $IMAGE
@@ -86,6 +87,8 @@ pipeline {
                 IMAGE=$IMAGE \
                 HTTP_PORT=$HTTP_PORT \
                 LETSENCRYPT_HOST=$DOMAIN \
+                NETWORK_ACCESS=$NETWORK_ACCESS \
+                NETWORK=$NETWORK \
                 LOG_LEVEL=$LOG_LEVEL \
                 NEWRELIC_API_KEY=$NEWRELIC_API_KEY_VALUE \
                 ARANGODB_URL=$ARANGODB_URL \
@@ -112,7 +115,6 @@ pipeline {
                 PAYOUT_SUBMIT_ENABLED=$PAYOUT_SUBMIT_ENABLED \
                 PAYOUT_SUBMIT_INTERVAL=$PAYOUT_SUBMIT_INTERVAL \
                 START_TIME=$START_TIME \
-                NETWORK_ACCESS=$NETWORK_ACCESS \
                 VIRTUAL_HOST=$DOMAIN \
                   bash -x ./${filename} && \
                 rm ${filename}'"
