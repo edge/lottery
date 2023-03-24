@@ -18,6 +18,13 @@ RUN npm install
 COPY web/index.html .
 COPY web/public ./public
 COPY web/src ./src
+
+ARG API_HOST
+ARG EXPLORER_HOST
+
+ENV VITE_API_HOST=$API_HOST
+ENV VITE_EXPLORER_HOST=$EXPLORER_HOST
+
 RUN npm run build
 
 FROM node:18

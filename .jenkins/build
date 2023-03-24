@@ -1,0 +1,52 @@
+#!/usr/bin/env groovy
+// Copyright (C) 2022 Edge Network Technologies Limited
+// Use of this source code is governed by a GNU GPL-style license
+// that can be found in the LICENSE.md file. All rights reserved.
+
+def imagesPushed = ''
+
+def buildAndPushImage(registryCredential, repository) {
+  docker.withRegistry("https://registry.edge.network", registryCredential) {
+    def image = docker.build("registry.edge.network/$repository", "--build-arg VITE_API_URL=$VITE_API_URL")
+    image.push()
+    return "registry.edge.network/$repository"
+  }
+}
+
+pipeline {
+  agent {
+    label "local"
+  }
+  stages {
+    stage("Build") {
+      steps {
+        script {
+          docker.withRegistry("https://registry.edge.network", REGISTRY_CREDENTIAL) {
+            def image = docker.build(
+              "registry.edge.network/lottery/${NETWORK}:latest",
+              "--build-arg API_HOST=$API_HOST --build-arg EXPLORER_HOST=$EXPLORER_HOST"
+            )
+            image.push()
+          }
+        }
+      }
+    }
+  }
+  // post {
+  //   success {
+  //     script {
+  //       discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) has completed successfully", result: "SUCCESS", webhookURL: DISCORD_BUILD_WEBHOOK
+  //     }
+  //   }
+  //   failure {
+  //     script {
+  //       discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) has failed", result: "FAILURE", webhookURL: DISCORD_BUILD_WEBHOOK
+  //     }
+  //   }
+  //   aborted {
+  //     script {
+  //       discordSend title: JOB_NAME, description: "${env.JOB_NAME} (#${env.BUILD_NUMBER}) was aborted", result: "ABORTED", webhookURL: DISCORD_BUILD_WEBHOOK
+  //     }
+  //   }
+  // }
+}
