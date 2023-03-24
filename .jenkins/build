@@ -3,16 +3,6 @@
 // Use of this source code is governed by a GNU GPL-style license
 // that can be found in the LICENSE.md file. All rights reserved.
 
-def imagesPushed = ''
-
-def buildAndPushImage(registryCredential, repository) {
-  docker.withRegistry("https://registry.edge.network", registryCredential) {
-    def image = docker.build("registry.edge.network/$repository", "--build-arg VITE_API_URL=$VITE_API_URL")
-    image.push()
-    return "registry.edge.network/$repository"
-  }
-}
-
 pipeline {
   agent {
     label "local"
