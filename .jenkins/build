@@ -14,7 +14,7 @@ pipeline {
           docker.withRegistry("https://registry.edge.network", REGISTRY_CREDENTIAL) {
             def image = docker.build(
               "registry.edge.network/lottery/${NETWORK}:latest",
-              "--build-arg API_HOST=$API_HOST --build-arg EXPLORER_HOST=$EXPLORER_HOST"
+              "--build-arg API_HOST=$API_HOST --build-arg EXPLORER_HOST=$EXPLORER_HOST ."
             )
             image.push()
           }
