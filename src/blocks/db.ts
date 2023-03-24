@@ -43,7 +43,7 @@ const model = ({ db, log }: Context) => {
     find: find(db, blocks),
     get: (hash: string) => blocks.document(hash),
     index: async (bs: Block[]) => {
-      const result = await blocksModel.insertMany(bs)
+      const result = await blocksModel.insertMany(bs.map(b => ({ hash: b.hash, height: b.height })))
       const errors = result.filter(isArangoError)
       errors.forEach(err => log.error('error indexing block', { err }))
       log.info('indexed blocks', { num: result.length - errors.length, errors: errors.length })
