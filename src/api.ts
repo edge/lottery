@@ -88,6 +88,7 @@ export default async (ctx: Context) => {
       const indexHtml = await readFile(`${ctx.config.static.path}${sep}index.html`)
       app.use(express.static(ctx.config.static.path))
       app.use((req, res, next) => {
+        if (res.headersSent) return next()
         if (req.headers['content-type'] !== 'application/json' && !fileRegexp.test(req.path)) {
           res.header('Content-Type', 'text/html').send(indexHtml)
         }
