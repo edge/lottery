@@ -73,7 +73,7 @@ pipeline {
           def script = deployScript()
 
           withCredentials([
-            usernamePassword(credentialsId: DB_AUTH, usernameVariable: 'ARANGODB_USERNAME', passwordVariable: 'ARANGODB_PASSWORD'),
+            usernamePassword(credentialsId: ARANGODB_AUTH, usernameVariable: 'ARANGODB_USERNAME', passwordVariable: 'ARANGODB_PASSWORD'),
             string(credentialsId: NEWRELIC_API_KEY, variable: 'NEWRELIC_API_KEY_VALUE'),
             usernamePassword(credentialsId: FUNDS_PAYER, usernameVariable: 'FUNDS_PAYER_ADDRESS', passwordVariable: 'FUNDS_PAYER_PRIVATE_KEY'),
           ]) {
