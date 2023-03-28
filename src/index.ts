@@ -63,7 +63,7 @@ main({
     submit: {
       batchSize: parseInt(process.env.PAYOUT_SUBMIT_BATCH_SIZE || '50'),
       dryRun: TRUE.includes(process.env.PAYOUT_SUBMIT_DRY_RUN || 'yes'),
-      enabled: TRUE.includes(process.env.PAYOUT_SUBMIT_ENABLED || 'yes'),
+      enabled: TRUE.includes(process.env.PAYOUT_SUBMIT_ENABLED || 'no'),
       interval: parseInt(process.env.PAYOUT_SUBMIT_INTERVAL || '60000')
     }
   },
