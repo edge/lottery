@@ -53,7 +53,6 @@ const getRollback = ({ model, ...ctx }: Context): RollbackFn => {
 
 /**
  * Synchronise blockchain.
- * As well as indexing blocks, other entities are indexed such as transactions and wallets.
  * Refer to various models' `index()` methods for the specifics of their indexing behaviour.
  */
 export const sync = (ctx: Context) => {
