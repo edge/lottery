@@ -4,6 +4,22 @@
 
 Service to calculate and pay XE lottery winnings
 
+## Development
+
+This project is bundled as a single Docker image for deployment to Edge networks. In local development, it is simpler to run the Node \(backend) and Vue projects separately.
+
+> The Node application root is here, and the Vue application root is in [web](web/).
+
+Before you do anything else, copy [.env.develop](./.env.develop) to .env and [web/.env.develop](web/.env.develop) to web/.env, then configure both as required for your testing. These include defaults for working locally, apart from the payer wallet.
+
+> For complete lists of variables, refer to [index.ts](src/index.ts) for Node variables and [web/src/stores/build.ts](./web/src/stores/build.ts) for Vue variables.
+>
+> If running the Docker image, combine all env variables into a single list. Vue frontend variables are distinguished by their `VITE_` [prefix](https://vitejs.dev/guide/env-and-mode.html#env-files).
+
+> A payer wallet (`FUNDS_PAYER_*`) is only required when actually processing payouts. By default, this behaviour is disabled to prevent accidental loss of funds!
+
+To start the Node backend, execute `docker compose up -d` (to start an ArangoDB database) and then `npm run dev` in the project root. Then, to start the Vue frontend, run `npm run dev` in the [web](web/) directory. To close everything, simply C-c both npm processes and run `docker-compose down` to stop the database.
+
 ## Contributing
 
 Interested in contributing to the project? Amazing! Before you do, please have a quick look at our [Contributor Guidelines](CONTRIBUTING.md) where we've got a few tips to help you get started.
