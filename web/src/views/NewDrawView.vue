@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import * as earnings from '@/api/earnings'
 import * as draws from '@/api/draws'
+import * as earnings from '@/api/earnings'
 import AddressLink from '@/components/AddressLink.vue'
 import HashLink from '@/components/HashLink.vue'
 import type { Payment } from '@/api/earnings'
