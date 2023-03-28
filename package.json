@@ -1,5 +1,5 @@
 {
-  "name": "lottery-api",
+  "name": "@edge/lottery",
   "version": "1.0.0",
   "description": "Service to calculate and pay XE lottery winnings",
   "author": "Edge Network <core@edge.network>",
