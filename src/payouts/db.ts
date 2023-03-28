@@ -55,17 +55,32 @@ const model = (ctx: Context) => {
       const refs = txs.map(tx => tx.tx.data.ref).filter(Boolean) as string[]
       const [count, payouts] = await self.search({ _key: { in: refs } } )
       if (count === 0) return
-      const updates = payouts.map<Update<Payout>>(p => {
-        const tx = txs.find(tx => tx.tx.data.ref === p.tx.data.ref) as BlockTx
-        return {
+
+      const updates: Update<Payout>[] = []
+      payouts.forEach(p => {
+        const tx = txs.find(tx => tx.tx.data.ref === p._key)
+        if (!tx) {
+          ctx.log.error('unexpected missing tx', { ref: p._key })
+          return
+        }
+        if (tx.tx.sender !== p.tx.sender) {
+          ctx.log.debug('skipped transaction - incorrect sender', { hash: tx.tx.hash, ref: p._key })
+          return
+        }
+        if (tx.tx.timestamp !== p.tx.timestamp) {
+          ctx.log.debug('skipped transaction - incorrect timestamp', { hash: tx.tx.hash, ref: p._key })
+        }
+        updates.push({
           _key: p._key,
           tx: {
             hash: tx.tx.hash
           },
           block: tx.block,
           status: 'processing'
-        }
+        })
       })
+      if (updates.length === 0) return
+
       const result = await self.updateMany(updates)
       const errors = result.filter(isArangoError)
       errors.forEach(err => ctx.log.error('failed to update payout', err))
