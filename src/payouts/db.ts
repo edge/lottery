@@ -67,7 +67,7 @@ const model = (ctx: Context) => {
           ctx.log.debug('skipped transaction - incorrect sender', { hash: tx.tx.hash, ref: p._key })
           return
         }
-        if (tx.tx.timestamp !== tx.tx.timestamp) {
+        if (tx.tx.timestamp !== p.tx.timestamp) {
           ctx.log.debug('skipped transaction - incorrect timestamp', { hash: tx.tx.hash, ref: p._key })
         }
         updates.push({
