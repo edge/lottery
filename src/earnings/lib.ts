@@ -14,6 +14,7 @@ export type ListParams = {
   offset?: number
   recipient?: string
   since?: number
+  sinceTimestamp?: number
   status?: PaymentStatus
   until?: number
 }
@@ -29,6 +30,7 @@ export type ListResponse = {
     offset: number
     recipient?: number
     since?: number
+    sinceTimestamp?: number
     status?: PaymentStatus
     totalCount: number
     until?: number

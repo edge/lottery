@@ -13,7 +13,7 @@ import { isArangoError } from '../../db'
  */
 export const sync = ({ config, model, log }: Context) => async () => {
   const latest = await model.earningsPayments.find(undefined, ['timestamp', 'DESC'])
-  const since = latest?.timestamp || config.startTime
+  const sinceTimestamp = latest?.timestamp || config.startTime
 
   const data: lib.Payment[] = []
 
@@ -21,8 +21,8 @@ export const sync = ({ config, model, log }: Context) => async () => {
   let offset = 0
   let fetch = true
   while (fetch) {
-    const res = await lib.list(config.earnings.host, { status: 'confirmed', limit, offset, since })
-    log.debug('fetched payments', { count: res.metadata.count, limit, offset, since })
+    const res = await lib.list(config.earnings.host, { status: 'confirmed', limit, offset, sinceTimestamp })
+    log.debug('fetched payments', { count: res.metadata.count, limit, offset, sinceTimestamp })
     data.push(...res.results)
     offset += limit
     if (offset > res.metadata.totalCount) fetch = false
@@ -34,5 +34,5 @@ export const sync = ({ config, model, log }: Context) => async () => {
   const result = await model.earningsPayments.insertMany(payments)
   const errors = result.filter(isArangoError)
   errors.forEach(err => log.warn('failed to insert payment', { err }))
-  log.info('synced payments', { since, num: result.length - errors.length, errors: errors.length })
+  log.info('synced payments', { sinceTimestamp, num: result.length - errors.length, errors: errors.length })
 }
