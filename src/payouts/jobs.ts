@@ -72,7 +72,7 @@ export const submit = ({ config, model, payer, log }: Context) => async () => {
     return
   }
 
-  const response = await xe.tx.createTransactions(config.blockchain.host, signed.map(t => t.tx as xe.tx.SignedTx))
+  const response = await xe.tx.createTransactions(config.blockchain.host.find(Boolean) as string, signed.map(t => t.tx as xe.tx.SignedTx))
   if (response.metadata.rejected) {
     const failed = response.results.filter(r => !r.success).map(r => r.transaction.data.ref)
     log.error('some transactions failed', { ...response.metadata, failed })

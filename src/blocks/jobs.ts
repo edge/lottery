@@ -61,10 +61,15 @@ export const sync = (ctx: Context) => {
 
   return async () => {
     let next: NextFn | undefined = () => xeSync({
-      host: config.blockchain.host,
+      host: [...config.blockchain.host],
+      hostSelection: config.blockchain.hostSelection,
       limit: config.blockchain.sync.batchSize,
       pageSize: config.blockchain.sync.pageSize,
       tip: model.blocks.tip,
+      requestCallback: r => {
+        log.trace('querying blockchain', { url: r.url })
+        return r
+      },
       rollback
     })
     while (next !== undefined) {
