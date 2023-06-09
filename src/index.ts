@@ -17,7 +17,8 @@ main({
     db: process.env.ARANGODB_DATABASE || 'lottery'
   },
   blockchain: {
-    host: process.env.BLOCKCHAIN_HOST || 'https://xe1.test.network',
+    host: (process.env.BLOCKCHAIN_HOST || 'https://xe1.test.network').split(','),
+    hostSelection: process.env.BLOCKCHAIN_HOST_SELECTION === 'cycle' ? 'cycle' : 'random',
     sync: {
       enabled:  TRUE.includes(process.env.BLOCKCHAIN_SYNC_ENABLED || 'yes'),
       interval: parseInt(process.env.BLOCKCHAIN_SYNC_INTERVAL || '60000'),

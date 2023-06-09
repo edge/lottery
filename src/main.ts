@@ -18,7 +18,8 @@ export type Config = {
     db: string
   }
   blockchain: {
-    host: string
+    host: string[]
+    hostSelection: 'cycle' | 'random'
     sync: {
       enabled: boolean
       interval: number

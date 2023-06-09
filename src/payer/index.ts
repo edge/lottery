@@ -13,7 +13,7 @@ export const payer = ({ config }: Context) => {
   let info: xe.wallet.WalletInfo | undefined
 
   const refresh = async () => {
-    info = await xe.wallet.infoWithNextNonce(config.blockchain.host, config.funds.payer.address)
+    info = await xe.wallet.infoWithNextNonce(config.blockchain.host.find(Boolean) as string, config.funds.payer.address)
     return info
   }
 
