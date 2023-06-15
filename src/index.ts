@@ -24,7 +24,8 @@ main({
       interval: parseInt(process.env.BLOCKCHAIN_SYNC_INTERVAL || '60000'),
       batchSize: parseInt(process.env.BLOCKCHAIN_SYNC_BATCH_SIZE || '10'),
       pageSize: parseInt(process.env.BLOCKCHAIN_SYNC_PAGE_SIZE || '10')
-    }
+    },
+    timeout: parseInt(process.env.BLOCKCHAIN_TIMEOUT || '30000')
   },
   earnings: {
     host: process.env.EARNINGS_HOST || 'https://earnings.test.network',
