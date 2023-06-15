@@ -68,7 +68,7 @@ export const sync = (ctx: Context) => {
       tip: model.blocks.tip,
       requestCallback: r => {
         log.trace('querying blockchain', { url: r.url })
-        return r
+        return r.timeout(config.blockchain.timeout)
       },
       rollback
     })

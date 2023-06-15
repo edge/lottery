@@ -1,6 +1,6 @@
 {
   "name": "@edge/lottery",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Service to calculate and pay XE lottery winnings",
   "author": "Edge Network <core@edge.network>",
   "contributors": [

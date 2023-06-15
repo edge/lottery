@@ -26,6 +26,7 @@ export type Config = {
       batchSize: number
       pageSize: number
     }
+    timeout: number
   }
   earnings: {
     host: string
