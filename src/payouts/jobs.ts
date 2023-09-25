@@ -16,7 +16,7 @@ export const confirm = ({ config, model, log }: Context) => async () => {
   }
 
   const threshold = tip.height - config.payout.confirm.threshold
-  const expired = Date.now() - config.payout.confirm.gracePeriod
+  const expired = tip.height - config.payout.confirm.graceBlocks
 
   const [count, payouts] = await model.payouts.search({
     status: { in: ['pending', 'processing'] },
@@ -31,7 +31,7 @@ export const confirm = ({ config, model, log }: Context) => async () => {
       // payout is processing and past confirmation threshold, move to confirmed
       updates.push({ _key: p._key, status: 'confirmed' })
     }
-    else if (p.tx.timestamp < expired) {
+    else if ((p.submitBlock?.height || 0) < expired) {
       // payout has expired without processing, move back to unsent
       updates.push({ _key: p._key, status: 'unsent' })
     }
@@ -50,6 +50,11 @@ export const submit = ({ config, model, payer, log }: Context) => async () => {
   const [, ps] = await model.payouts.search({ status: { eq: 'unsent' } }, [config.payout.submit.batchSize])
   if (ps.length === 0) {
     log.info('no transactions')
+    return
+  }
+  const tip = await model.blocks.tip()
+  if (tip === undefined) {
+    log.error('refusing to submit transactions without a tip block')
     return
   }
   log.info('submitting transactions', { num: ps.length })
@@ -88,6 +93,7 @@ export const submit = ({ config, model, payer, log }: Context) => async () => {
   response.results.forEach(rcpt => {
     const p = signed.find(s => s.tx.data.ref === rcpt.transaction.data.ref) as Key & Payout
     p.attempts = 1 + (p.attempts || 0)
+    p.submitBlock = { hash: tip.hash, height: tip.height }
     if (rcpt.success) {
       p.status = 'pending'
       p.lastResponse = ''
