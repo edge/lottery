@@ -58,7 +58,7 @@ main({
   payout: {
     confirm: {
       enabled: TRUE.includes(process.env.PAYOUT_CONFIRM_ENABLED || 'yes'),
-      gracePeriod: parseInt(process.env.PAYOUT_CONFIRM_GRACE_PERIOD || '900000'),
+      graceBlocks: parseInt(process.env.PAYOUT_CONFIRM_GRACE_BLOCKS || '15'),
       interval: parseInt(process.env.PAYOUT_CONFIRM_INTERVAL || '60000'),
       threshold: parseInt(process.env.PAYOUT_CONFIRM_THRESHOLD || '10')
     },

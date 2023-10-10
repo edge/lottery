@@ -19,6 +19,7 @@ export type Payout = {
   status: PayoutStatus
   tx: PayoutTx
   block?: BlockID
+  submitBlock?: BlockID
 }
 
 /**

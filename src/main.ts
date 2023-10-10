@@ -57,7 +57,7 @@ export type Config = {
   payout: {
     confirm: {
       enabled: boolean
-      gracePeriod: number
+      graceBlocks: number
       interval: number
       threshold: number
     }
