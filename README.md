@@ -4,6 +4,11 @@
 
 Service to calculate and pay XE lottery winnings
 
+## System Requirements
+
+- Node.js v18+
+- Docker or ArangoDB v3.11
+
 ## Development
 
 This project is bundled as a single Docker image for deployment to Edge networks. In local development, it is simpler to run the Node \(backend) and Vue projects separately.
