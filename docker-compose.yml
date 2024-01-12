@@ -10,7 +10,7 @@ volumes:
 
 services:
   arangodb:
-    image: arangodb:latest
+    image: arangodb:3.11
     env_file: .env
     volumes:
       - apps:/var/lib/arangodb3-apps
