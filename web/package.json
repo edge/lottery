@@ -12,7 +12,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@edge/xe-utils": "^1.8.1",
+    "@edge/xe-utils": "^1.11.1",
     "pinia": "^2.0.32",
     "superagent": "^8.0.9",
     "vue": "^3.2.47",
