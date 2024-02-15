@@ -1,6 +1,6 @@
 {
   "name": "@edge/lottery",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Service to calculate and pay XE lottery winnings",
   "author": "Edge Network <core@edge.network>",
   "contributors": [
@@ -31,8 +31,8 @@
   "dependencies": {
     "@edge/log": "^1.6.2",
     "@edge/misc-utils": "^1.0.4",
-    "@edge/xe-sync": "^1.3.0",
-    "@edge/xe-utils": "^1.8.1",
+    "@edge/xe-sync": "^1.3.1",
+    "@edge/xe-utils": "^1.11.1",
     "arangojs": "^7.8.0",
     "arangosearch": "^1.1.0",
     "cors": "^2.8.5",
